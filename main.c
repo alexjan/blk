@@ -1,24 +1,24 @@
 
-#include <htc.h>
+#include <pic.h>
 #include "main.h"
 
-#define _12F629
+// #define _12F629
 
 #define true 1
 #define false 0
 
-    __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WDTE_ON)	
+    __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WDTE_ON);	
 
-    __IDLOC(FFFF)
+    __IDLOC(FFFF);
 
 void main(void){
     
     di();
 	
-    OSCCAL = _READ_OSCCAL_DATA();
+    OSCCAL = __osccal_val();
     
-    if(!nPOW) {
-    	nPOW = true;				// Detect power on reset 
+    if(!nPOR) {
+    	nPOR = true;				// Detect power on reset 
     }
     else if(!nBOD){
     	nBOD = true;				// Detect brown out
