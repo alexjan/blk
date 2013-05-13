@@ -9,8 +9,10 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-unsigned char Error;
-
+volatile unsigned char Error, cnt, TimeOut; 
+volatile unsigned char Count200uS,Count10mS, Count1S, Block, Rise, FlagEdge;
+static bit IncBufferFlag;
+unsigned int Buffer;
 
 void main(void){
     
@@ -43,16 +45,66 @@ void main(void){
 	ei();
 	RunTimer0;
 	RunTimer1;
+	cnt = 0;
 	while (true){
-	    asm("nop");	
-		
-	}
+// System Timer    	
+    	if(Count200uS > 50){
+        	if(Count10mS++ > 100){
+            	if(Count1S++ > 120){
+            	    Count1S = 0;
+            	}
+            	TimeOut++;
+        	    Count10mS = 0;
+        	}
+            Count200uS = 0;              // count 10 mS
+    	}
+//System timer END
+    	
+        if(!Buffer){
+            if (FlagEdge && !Block){
+                if(Rise){
+                    if(cnt > WidthImp) {
+                       	cnt = 0;
+                       	Rise = false;
+                    }
+                }
+            	else {
+            	     if(cnt > PauseImp) {
+                       	cnt = 0;
+                       	Rise = true;
+                       	Buffer--;
+                    }
+            	}
+            	cnt++;
+            	FlagEdge = false;
+        	}
+        }
+    }
 }
 
 void interrupt MyInt (void){
 	if(T0IE && T0IF){
-		TMR0 = 150;
-		TMR0IF = false;
+        if(!Block && InputControl == true){
+        	Block = true;
+    	}
+    	else if (InputControl == false){
+        	Block = false;
+    	}
+    	if(IncBufferFlag && InputPin == true){
+        	if(TimeOut > Pause) {
+            	cnt = 0;
+            	Rise = true;
+            	Buffer = 0;
+            }   	
+        	Buffer++;
+        	TimeOut = 0;
+        	IncBufferFlag = false;
+    	}   	
+    	else if (InputControl == false) IncBufferFlag = true;
+    	Count200uS++;
+      	FlagEdge = true;
+		TMR0 = 55;
+		T0IF = false;
 	}
 	if(TMR1IE && TMR1IF){
     	Error = CountOver;

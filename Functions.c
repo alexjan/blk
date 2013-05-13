@@ -28,9 +28,9 @@ void SetupPins(void){
   // Init GPIO as digital I/O
      
     GPIO    = 0b11111111;			 
-    TRISIO  = 0b11111111;			// 0 - as output, 1 - as input
     WPU     = 0b00000000;			// 0 - Pull-up disabled, 1 - Pull-up enabled
     IOC     = 0b00000000;			// 0 - int-on-change disable, 1 - int-on-change enable
+    
     CMCON  |= 0b00000111;           // All port config as digit i/o
     
     #ifdef _12F675
@@ -38,6 +38,8 @@ void SetupPins(void){
     ANSEL |= 0b00001111; 
 
     #endif
+    
+    TRISIO  = 0b11111111;			// 0 - as output, 1 - as input
     
     #ifdef OutputPin == GP2
         TRISIO &= 0b11111011;
