@@ -1,15 +1,16 @@
+#include <htc.h>
 
-#include <pic.h>
 #include "main.h"
+//#include "Functions.c"
 
 // #define _12F629
 
-#define true 1
-#define false 0
+__CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WDTE_ON);	
 
-    __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WDTE_ON);	
+__IDLOC(FFFF);
 
-    __IDLOC(FFFF);
+unsigned char Error;
+
 
 void main(void){
     
@@ -30,40 +31,31 @@ void main(void){
 	
 	OPTION_REG = 0b10001101;		// WDT - 18mS x 32 = 576mS
 
-
-    // Init GPIO as digital I/O
-     
-    GPIO    = 0b11111111;			 
-    TRISIO  = 0b11111111;			// 0 - as output, 1 - as input
-    WPU     = 0b00000000;			// 0 - Pull-up disabled, 1 - Pull-up enabled
-    IOC     = 0b00000000;			// 0 - int-on-change disable, 1 - int-on-change enable
-    CMCON  |= 0b00000111;
-    
-    #ifdef _12F675
-    	
-    ANSEL |= 0b00001111; 
-
-    #endif
-	
 	//Init TMR0 for system clock 
 
 	//Init TMR1 for count impuls 
 	
 	CLRWDT();
+	SetupPins();
+	SetupTMR0();                    // Setup for internal timer
+	SetupTMR1();                    //Setup for count input impuls
 	PEIE = true;
 	ei();
+	RunTimer0;
+	RunTimer1;
 	while (true){
-		
+	    asm("nop");	
 		
 	}
 }
 
 void interrupt MyInt (void){
 	if(T0IE && T0IF){
-		
+		TMR0 = 150;
 		TMR0IF = false;
 	}
 	if(TMR1IE && TMR1IF){
+    	Error = CountOver;
 		TMR1IF = false;
 	}
 }
