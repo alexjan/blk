@@ -4,7 +4,7 @@
 #define true 1
 #define false 0
 
-#define Pause 5                         // Wait for next otpusk in Second
+ #define Pause 5                         // Wait for next otpusk in Second
 #define WidthImp 20                     // x 200 uS - now 5mS
 #define PauseImp 20                     // x 200 uS - now 5mS 
 #define InputPin GP2

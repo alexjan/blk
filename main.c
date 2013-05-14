@@ -60,52 +60,42 @@ void main(void){
     	}
 //System timer END
     	
-        if(!Buffer){
-            if (FlagEdge && !Block){
-                if(Rise){
-                    if(cnt > WidthImp) {
-                       	cnt = 0;
-                       	Rise = false;
-                    }
-                }
-            	else {
-            	     if(cnt > PauseImp) {
-                       	cnt = 0;
-                       	Rise = true;
-                       	Buffer--;
-                    }
-            	}
-            	cnt++;
-            	FlagEdge = false;
+        if(!Buffer && !Block){
+            if(Rise){
+                if(cnt > WidthImp){
+                    OutputPin = false;                
+                   	cnt = 0;
+                   	Rise = false; 
+               	}               
+            }
+        	else if(cnt > PauseImp) {
+               	cnt = 0;
+               	Rise = true;
+               	OutputPin = true;
+               	Buffer--;
         	}
+        	cnt++;
+        	FlagEdge = false;
         }
     }
 }
 
 void interrupt MyInt (void){
 	if(T0IE && T0IF){
-        if(!Block && InputControl == true){
-        	Block = true;
-    	}
-    	else if (InputControl == false){
-        	Block = false;
-    	}
-    	if(IncBufferFlag && InputPin == true){
-        	if(TimeOut > Pause) {
-            	cnt = 0;
-            	Rise = true;
-            	Buffer = 0;
-            }   	
+    	Block = InputControl;
+    	if (InputPin && Next){
+        	if(TimeOut > Pause) Buffer = 0;
+            Rise = true; 	
         	Buffer++;
         	TimeOut = 0;
-        	IncBufferFlag = false;
-    	}   	
-    	else if (InputControl == false) IncBufferFlag = true;
+        	Next = false;
+        }
+        else if (!InputPin) Next = true;
     	Count200uS++;
-      	FlagEdge = true;
 		TMR0 = 55;
 		T0IF = false;
 	}
+	
 	if(TMR1IE && TMR1IF){
     	Error = CountOver;
 		TMR1IF = false;
