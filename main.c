@@ -10,8 +10,7 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 __IDLOC(FFFF);
 
 volatile unsigned char Error, cnt, TimeOut; 
-volatile unsigned char Count200uS,Count10mS, Count1S, Block, Rise, FlagEdge;
-static bit IncBufferFlag;
+volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise;
 unsigned int Buffer;
 
 void main(void){
@@ -51,16 +50,35 @@ void main(void){
     	if(Count200uS > 50){
         	if(Count10mS++ > 100){
             	if(Count1S++ > 120){
+                	
             	    Count1S = 0;
             	}
             	TimeOut++;
         	    Count10mS = 0;
         	}
-            Count200uS = 0;              // count 10 mS
+        	CLRWDT();
+        	Count200uS = 0;              // count 10 mS
     	}
 //System timer END
     	
-        if(!Buffer && !Block){
+    	Block = InputControl;
+//    	OutputPin = Block;
+    	if(Next){	
+        	if (InputPin){
+            	if(TimeOut > WaitForNext) Buffer = 0;
+                Rise = true; 	
+            	Buffer++;
+            	TimeOut = 0;
+            	Next = false;
+            }
+         }   
+        else if (!InputPin) Next = true;
+        
+        
+        if(Block){
+        
+        }
+        else  if(Buffer){
             if(Rise){
                 if(cnt > WidthImp){
                     OutputPin = false;                
@@ -68,31 +86,23 @@ void main(void){
                    	Rise = false; 
                	}               
             }
-        	else if(cnt > PauseImp) {
-               	cnt = 0;
-               	Rise = true;
-               	OutputPin = true;
-               	Buffer--;
-        	}
-        	cnt++;
-        	FlagEdge = false;
+        	else {
+            	if(cnt > PauseImp) {
+//                	Rise = true;                // For test
+                   	OutputPin = true;
+                   	cnt = 0;
+                   	Buffer--;
+            	}
+            }   	
         }
     }
 }
 
 void interrupt MyInt (void){
 	if(T0IE && T0IF){
-    	Block = InputControl;
-    	if (InputPin && Next){
-        	if(TimeOut > Pause) Buffer = 0;
-            Rise = true; 	
-        	Buffer++;
-        	TimeOut = 0;
-        	Next = false;
-        }
-        else if (!InputPin) Next = true;
+    	cnt++;
     	Count200uS++;
-		TMR0 = 55;
+		TMR0 = 99;
 		T0IF = false;
 	}
 	

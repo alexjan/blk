@@ -39,15 +39,15 @@ void SetupPins(void){
 
     #endif
     
-    TRISIO  = 0b11111111;			// 0 - as output, 1 - as input
+    TRISIO  = 0b11011111;			// 0 - as output, 1 - as input
     
-    #ifdef OutputPin == GP2
-        TRISIO &= 0b11111011;
-    #elif OutputPin == GP4 
-        TRISIO &= 0b11101111;
-    #elif OutputPin == GP5 
-        TRISIO &= 0b11011111;
-    #endif
+//    #ifdef OutputPin == GP2
+//        TRISIO &= 0b11111011;
+//    #elif OutputPin == GP4 
+//        TRISIO &= 0b11101111;
+//    #elif OutputPin == GP5 
+//        TRISIO &= 0b11011111;
+//    #endif
     
 }
 
