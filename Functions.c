@@ -27,8 +27,8 @@ void SetupTMR1(void){
 void SetupPins(void){
   // Init GPIO as digital I/O
      
-    GPIO    = 0b11111111;			 
-    WPU     = 0b00000000;			// 0 - Pull-up disabled, 1 - Pull-up enabled
+    GPIO    = 0b11111011;			 
+    WPU     = 0b00000100;			// 0 - Pull-up disabled, 1 - Pull-up enabled
     IOC     = 0b00000000;			// 0 - int-on-change disable, 1 - int-on-change enable
     
     CMCON  |= 0b00000111;           // All port config as digit i/o

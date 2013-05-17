@@ -9,15 +9,15 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char Error, cnt, TimeOut; 
-volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise;
+volatile unsigned char Error, cnt, TimeOut,FlgInputPin; 
+volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise, Pin;
 unsigned int Buffer;
 
 void main(void){
     
     di();
 	
-    OSCCAL = __osccal_val();
+    OSCCAL = 0x34; //__osccal_val();
     
     if(!nPOR) {
     	nPOR = true;				// Detect power on reset 
@@ -37,6 +37,7 @@ void main(void){
 	//Init TMR1 for count impuls 
 	
 	CLRWDT();
+	
 	SetupPins();
 	SetupTMR0();                    // Setup for internal timer
 	SetupTMR1();                    //Setup for count input impuls
@@ -45,6 +46,8 @@ void main(void){
 	RunTimer0;
 	RunTimer1;
 	cnt = 0;
+	Rise = false;
+	Next = true;
 	while (true){
 // System Timer    	
     	if(Count200uS > 50){
@@ -53,7 +56,7 @@ void main(void){
                 	
             	    Count1S = 0;
             	}
-            	TimeOut++;
+            	if(Buffer) TimeOut++;
         	    Count10mS = 0;
         	}
         	CLRWDT();
@@ -62,34 +65,30 @@ void main(void){
 //System timer END
     	
     	Block = InputControl;
-//    	OutputPin = Block;
-    	if(Next){	
-        	if (InputPin){
-            	if(TimeOut > WaitForNext) Buffer = 0;
-                Rise = true; 	
-            	Buffer++;
-            	TimeOut = 0;
-            	Next = false;
-            }
-         }   
-        else if (!InputPin) Next = true;
         
-        
-        if(Block){
+        if (InputPin && Next) Next = false; 
+        else if (!InputPin){
+        	Buffer = 3;        
+        	Next = true;
+        }
+            
+        if(Block){    
+            
+//            Buffer = 3;
         
         }
         else  if(Buffer){
             if(Rise){
                 if(cnt > WidthImp){
-                    OutputPin = false;                
+                    OutputPin = true;                
                    	cnt = 0;
                    	Rise = false; 
                	}               
             }
         	else {
             	if(cnt > PauseImp) {
-//                	Rise = true;                // For test
-                   	OutputPin = true;
+                	Rise = true;                // For test
+                   	OutputPin = false;
                    	cnt = 0;
                    	Buffer--;
             	}
@@ -100,9 +99,10 @@ void main(void){
 
 void interrupt MyInt (void){
 	if(T0IE && T0IF){
-    	cnt++;
+    	if (Buffer) cnt++;
+    	else cnt = 0;
     	Count200uS++;
-		TMR0 = 99;
+		TMR0 = 90;
 		T0IF = false;
 	}
 	
