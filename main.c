@@ -9,7 +9,7 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char Error, cnt, TimeOut,FlgInputPin; 
+volatile unsigned char Error, cnt, TimeOut,InPutPin,TcntHi,TcntLo; 
 volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise, Pin;
 unsigned int Buffer;
 
@@ -48,6 +48,9 @@ void main(void){
 	cnt = 0;
 	Rise = false;
 	Next = true;
+//	TcntHi = 4;
+//	TcntLo = 4;
+	Pin = true;
 	while (true){
 // System Timer    	
     	if(Count200uS > 50){
@@ -66,12 +69,18 @@ void main(void){
     	
     	Block = InputControl;
         
-        if (InputPin && Next) Next = false; 
-        else if (!InputPin){
-        	Buffer = 3;        
-        	Next = true;
-        }
-            
+        if(InputPin == true && Pin){
+            //Buffer = 10000;
+            if(TimeOut > WaitForNext)Buffer = 0;
+            TimeOut = 0;
+            Buffer ++;//= 250;
+            Pin = false;
+        }    
+        else if (InputPin == false) Pin = true; 
+         
+        
+        
+        
         if(Block){    
             
 //            Buffer = 3;
@@ -102,7 +111,21 @@ void interrupt MyInt (void){
     	if (Buffer) cnt++;
     	else cnt = 0;
     	Count200uS++;
-		TMR0 = 90;
+//		if(InputPin == true){ 
+//    	    if(!TcntHi--) {
+//                InPutPin = true;
+//                TcntHi = 4;
+//            }
+//            else TcntLo = 4; 
+//        }
+//        else { 
+//    	    if(!TcntLo--) {
+//                InPutPin = false;
+//                TcntLo = 4;
+//            }
+//            else TcntHi = 4;
+//        }
+        TMR0 = 90;
 		T0IF = false;
 	}
 	
@@ -110,4 +133,11 @@ void interrupt MyInt (void){
     	Error = CountOver;
 		TMR1IF = false;
 	}
+	
+	if(INTE && INTF){
+//    	if(TimeOut > WaitForNext) Buffer = 1;
+//    	else Buffer++;
+//        Buffer = 1;
+    	INTF = false;
+    }   	 
 }

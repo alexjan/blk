@@ -4,11 +4,11 @@
 #define true 1
 #define false 0
 
-#define WaitForNext 15                         // Wait for next otpusk in Second
+#define WaitForNext 10                         // Wait for next otpusk in Second
 #define WidthImp 15                     // x 200 uS - now 8mS
 #define PauseImp 15                     // x 200 uS - now 8mS (F = 166.67Hz) 
-#define InputPin GP2
-#define OutputPin GP5
+#define InputPin GP5
+#define OutputPin GP2
 #define InputControl GP4
 #define RunTimer0 T0CS = 0;             //Clock Select system CLK
 #define RunTimer1 TMR1ON = true;
