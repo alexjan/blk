@@ -4,7 +4,7 @@
 #define true 1
 #define false 0
 
-#define WaitForNext 10                         // Wait for next otpusk in Second
+#define WaitForNext 20                         // Wait for next otpusk in Second
 #define WidthImp 15                     // x 200 uS - now 8mS
 #define PauseImp 15                     // x 200 uS - now 8mS (F = 166.67Hz) 
 #define InputPin GP5
