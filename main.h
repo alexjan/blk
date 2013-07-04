@@ -1,5 +1,6 @@
 #include <htc.h>
 
+#define PT2272_M4
 
 #define true 1
 #define false 0
@@ -10,6 +11,7 @@
 #define InputPin GP5
 #define OutputPin GP2
 #define InputControl GP4
+#define InputControl2 GP1
 #define RunTimer0 T0CS = 0;             //Clock Select system CLK
 #define RunTimer1 TMR1ON = true;
 
