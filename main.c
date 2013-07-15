@@ -9,8 +9,8 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char Error, cnt, TimeOut,InPutPin,TcntHi,TcntLo,BlockFlag, ClearBlockFlag, FlagGun, Gun;
-volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise, Pin, cntlow, cnthi;
+volatile unsigned char cnt, TimeOut,BlockFlag, ClearBlockFlag, FlagGun, Gun;
+volatile unsigned char Count200uS,Count10mS, Count1S, Block, Rise, Pin;
 unsigned int Buffer,cnt_;
 
 void main(void){
@@ -40,7 +40,6 @@ void main(void){
 	RunTimer1;
 	cnt = 0;
 	Rise = false;
-	Next = true;
 	Pin = true;
         BlockFlag = true;
 	while (true){
@@ -108,7 +107,7 @@ void main(void){
                     }
                 }
                 else {
-                    cnt_  = 3150;
+                    cnt_  = 4544;
                     TRISIObits.TRISIO0  = false;
                     asm("nop");
                     ContrGun = false;
@@ -129,7 +128,7 @@ void interrupt MyInt (void){
         if (Buffer) cnt++;
         else cnt = 0;
         Count200uS++;
-        TMR0 = 97;
+        TMR0 = 81;
         T0IF = false;
     }
 
