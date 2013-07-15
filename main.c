@@ -9,8 +9,8 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char Error, cnt, TimeOut,InPutPin,TcntHi,TcntLo,BlockFlag, ClearBlockFlag;
-volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise, Pin;
+volatile unsigned char Error, cnt, TimeOut,InPutPin,TcntHi,TcntLo,BlockFlag, ClearBlockFlag, FlagGun, Gun;
+volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise, Pin, cntlow, cnthi;
 unsigned int Buffer;
 
 void main(void){
@@ -75,30 +75,50 @@ void main(void){
 
         #endif
 
-        
+        if (TRISIObits.TRISIO0 == true) Gun = ~ContrGun;
+
+        if (Gun == false && FlagGun == false) FlagGun = true;
+
         if(InputPin == true && Pin){
             //Buffer = 10000;
-            if(TimeOut > WaitForNext)Buffer = 0;
+            if(TimeOut > WaitForNext || FlagGun)Buffer = 0;
+            FlagGun = false;
             TimeOut = 0;
             Buffer ++;//= 250;
             Pin = false;
         }    
         else if (InputPin == false) Pin = true; 
          
-        if(Block);
-        else if(Buffer){
-            if(Rise){
-                if(cnt > WidthImp){
-                    OutputPin = true;
-                    cnt = 0;
-                    Rise = false;
-               	}
+        if(Block) TRISIObits.TRISIO0 = true;
+        else {
+            if(Buffer){
+                if (Gun){
+                    if(Rise){
+                        if(cnt > WidthImp){
+                            OutputPin = true;
+                            cnt = 0;
+                            Rise = false;
+                        }
+                    }
+                    else if(cnt > PauseImp) {
+                        Rise = true;
+                        OutputPin = false;
+                        cnt = 0;
+                        Buffer--;
+                    }
+                }
+                else {
+                    unsigned int cnt = 1000;
+                    TRISIObits.TRISIO0  = false;
+                    asm("nop");
+                    ContrGun = false;
+                    Gun = true;
+                    while(cnt--);// asm("nop");
+                }
             }
-            else if(cnt > PauseImp) {
-                Rise = true;
-                OutputPin = false;
-                cnt = 0;
-                Buffer--;
+            else if(Gun) {
+                ContrGun = true;
+                TRISIObits.TRISIO0 = true;
             }
         }
     }
