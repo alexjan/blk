@@ -11,7 +11,7 @@ __IDLOC(FFFF);
 
 volatile unsigned char Error, cnt, TimeOut,InPutPin,TcntHi,TcntLo,BlockFlag, ClearBlockFlag, FlagGun, Gun;
 volatile unsigned char Count200uS,Count10mS, Count1S, Next, Block, Rise, Pin, cntlow, cnthi;
-unsigned int Buffer;
+unsigned int Buffer,cnt_;
 
 void main(void){
     
@@ -108,12 +108,12 @@ void main(void){
                     }
                 }
                 else {
-                    unsigned int cnt = 1000;
+                    cnt_  = 3150;
                     TRISIObits.TRISIO0  = false;
                     asm("nop");
                     ContrGun = false;
                     Gun = true;
-                    while(cnt--);// asm("nop");
+                    while(cnt_--);
                 }
             }
             else if(Gun) {
@@ -129,7 +129,7 @@ void interrupt MyInt (void){
         if (Buffer) cnt++;
         else cnt = 0;
         Count200uS++;
-        TMR0 = 90;
+        TMR0 = 97;
         T0IF = false;
     }
 
