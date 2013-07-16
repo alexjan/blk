@@ -68,7 +68,7 @@ void main(void){
         }
         else if (InputControl2 = false)ClearBlockFlag = true;
 
-        #elif PT2272_L4
+        #else #ifdef PT2272_L4
 
     	Block = InputControl;
 
