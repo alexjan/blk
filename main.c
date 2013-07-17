@@ -10,7 +10,7 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 __IDLOC(FFFF);
 
 volatile unsigned char cnt, TimeOut,BlockFlag, ClearBlockFlag, FlagGun, Gun;
-volatile unsigned char Count200uS,Count10mS, Count1S, Block, Rise, Pin;
+volatile unsigned char Count200uS,WriteBufFlag, Count10mS, Count1S, Block, Rise, Pin;
 unsigned int Buffer,cnt_;
 
 void main(void){
@@ -41,7 +41,7 @@ void main(void){
 	cnt = 0;
 	Rise = false;
 	Pin = true;
-        BlockFlag = true;
+    BlockFlag = true;
 	while (true){
 // System Timer    	
     	if(Count200uS > 50){
@@ -59,6 +59,7 @@ void main(void){
         if(InputControl == true && BlockFlag){
             Block = true;
             BlockFlag = false;
+            OutGun = true;
         }
         else if (InputControl == false) BlockFlag = true;
 
@@ -74,22 +75,20 @@ void main(void){
 
         #endif
 
-        if (TRISIObits.TRISIO0 == true) Gun = ~ContrGun;
-
-        if (Gun == false && FlagGun == false) FlagGun = true;
-
         if(InputPin == true && Pin){
             //Buffer = 10000;
-            if(TimeOut > WaitForNext || FlagGun)Buffer = 0;
-            FlagGun = false;
+            if(TimeOut > WaitForNext)Buffer = 0;
             TimeOut = 0;
             Buffer ++;//= 250;
             Pin = false;
         }    
         else if (InputPin == false) Pin = true; 
-         
-        if(Block) TRISIObits.TRISIO0 = true;
+        
+        if(!WriteBufFlag)Gun = ~ContrGun;        
+        
+        if(Block) ;
         else {
+            if(!WriteBufFlag)OutGun = ContrGun;
             if(Buffer){
                 if (Gun){
                     if(Rise){
@@ -108,17 +107,16 @@ void main(void){
                 }
                 else {
                     cnt_  = 4544;
-                    TRISIObits.TRISIO0  = false;
-                    asm("nop");
-                    ContrGun = false;
+                    OutGun = false;
                     Gun = true;
+                    WriteBufFlag  = true;
                     while(cnt_--);
                 }
             }
-            else if(Gun) {
-                ContrGun = true;
-                TRISIObits.TRISIO0 = true;
-            }
+            else if (WriteBufFlag) {
+                WriteBufFlag = false;
+                OutGun = true;
+            }    
         }
     }
 }
