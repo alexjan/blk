@@ -66,7 +66,7 @@ void main(void){
             Block = false;
             ClearBlockFlag = false;
         }
-        else if (InputControl2 = false)ClearBlockFlag = true;
+        else if (InputControl2 == false)ClearBlockFlag = true;
 
         #else #ifdef PT2272_L4
 
@@ -74,7 +74,8 @@ void main(void){
 
         #endif
 
-        if (TRISIObits.TRISIO0 == true) Gun = ~ContrGun;
+        Gun = ~ContrGun;
+        OutGun = ContrGun;
 
         if (Gun == false && FlagGun == false) FlagGun = true;
 
@@ -88,7 +89,7 @@ void main(void){
         }    
         else if (InputPin == false) Pin = true; 
          
-        if(Block) TRISIObits.TRISIO0 = true;
+        if(Block);
         else {
             if(Buffer){
                 if (Gun){
@@ -108,17 +109,13 @@ void main(void){
                 }
                 else {
                     cnt_  = 4544;
-                    TRISIObits.TRISIO0  = false;
-                    asm("nop");
-                    ContrGun = false;
+                    OutGun = false;
                     Gun = true;
                     while(cnt_--);
                 }
             }
-            else if(Gun) {
-                ContrGun = true;
-                TRISIObits.TRISIO0 = true;
-            }
+            else if(Gun) OutGun = true;
+                
         }
     }
 }

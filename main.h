@@ -12,7 +12,8 @@
 #define OutputPin GP2
 #define InputControl GP4
 #define InputControl2 GP1
-#define ContrGun GP0
+#define OutGun GP0
+#define ContrGun GP3
 #define RunTimer0 T0CS = 0;             //Clock Select system CLK
 #define RunTimer1 TMR1ON = true;
 
