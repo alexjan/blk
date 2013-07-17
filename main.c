@@ -9,7 +9,7 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char cnt, TimeOut,BlockFlag, ClearBlockFlag, Gun, FlGun, FlGun2;
+volatile unsigned char cnt, TimeOut, TimeOutGun, BlockFlag, ClearBlockFlag, Gun, FlGun, FlGun2;
 volatile unsigned char Count200uS,WriteBufFlag, Count10mS, Count1S, Block, Rise, Pin;
 unsigned int Buffer,cnt_;
 
@@ -41,14 +41,18 @@ void main(void){
 	cnt = 0;
 	Rise = false;
 	Pin = true;
-        BlockFlag = true;
+    BlockFlag = true;
 	FlGun = true;
+	TimeOutGun = 0;
+    WriteBufFlag  = false;
         while (true){
 // System Timer    	
     	if(Count200uS > 50){
             if(Count10mS++ > 100){
                 if(Count1S++ > 120) Count1S = 0;
-                if(Buffer) TimeOut++;
+                if(Gun) TimeOutGun++;
+                else TimeOutGun = 0;
+                if(Buffer || WriteBufFlag) TimeOut++;
                 Count10mS = 0;
             }
             CLRWDT();
@@ -90,16 +94,22 @@ void main(void){
 
         if(FlGun2 && !Gun) FlGun2 = false;
 
-        if(!WriteBufFlag)Gun = ~ContrGun;
+        if(WriteBufFlag == false){
+            OutGun = ContrGun;
+            Gun = ~ContrGun;
+        }    
         
-        if(Block){
-            if(FlGun && !Gun){
-                FlGun = false;
-                OutGun = true;
-            }
+        if (Gun && TimeOutGun > 60) {
+            TimeOutGun = 0;
+            cnt_ = 9000;
+            OutGun = true;
+            while(cnt--);
+            OutGun = false;
         }
+        
+        if(Block);
         else {
-            if(!WriteBufFlag)OutGun = ContrGun;
+            if(!WriteBufFlag)
             if(Buffer){
                 if (Gun){
                     if(Rise){
@@ -124,7 +134,7 @@ void main(void){
                     while(cnt_--);
                 }
             }
-            else if (WriteBufFlag && TimeOut < WaitForNext)WriteBufFlag = false; 
+            else if (WriteBufFlag)WriteBufFlag = false; 
         }
     }
 }

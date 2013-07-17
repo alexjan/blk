@@ -39,7 +39,7 @@ void SetupPins(void){
 
     #endif
     
-    TRISIO  = 0b11111011;			// 0 - as output, 1 - as input
+    TRISIO  = 0b11111010;			// 0 - as output, 1 - as input
     
     INTE = false;
     INTF = false;
