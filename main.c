@@ -9,7 +9,7 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char cnt, TimeOut,BlockFlag, ClearBlockFlag, FlagGun, Gun;
+volatile unsigned char cnt, TimeOut,BlockFlag, ClearBlockFlag, Gun, FlGun, FlGun2;
 volatile unsigned char Count200uS,WriteBufFlag, Count10mS, Count1S, Block, Rise, Pin;
 unsigned int Buffer,cnt_;
 
@@ -41,8 +41,9 @@ void main(void){
 	cnt = 0;
 	Rise = false;
 	Pin = true;
-    BlockFlag = true;
-	while (true){
+        BlockFlag = true;
+	FlGun = true;
+        while (true){
 // System Timer    	
     	if(Count200uS > 50){
             if(Count10mS++ > 100){
@@ -59,7 +60,7 @@ void main(void){
         if(InputControl == true && BlockFlag){
             Block = true;
             BlockFlag = false;
-            OutGun = true;
+            FlGun = true;
         }
         else if (InputControl == false) BlockFlag = true;
 
@@ -67,7 +68,7 @@ void main(void){
             Block = false;
             ClearBlockFlag = false;
         }
-        else if (InputControl2 = false)ClearBlockFlag = true;
+        else if (InputControl2 == false)ClearBlockFlag = true;
 
         #else #ifdef PT2272_L4
 
@@ -76,17 +77,27 @@ void main(void){
         #endif
 
         if(InputPin == true && Pin){
-            //Buffer = 10000;
-            if(TimeOut > WaitForNext)Buffer = 0;
-            TimeOut = 0;
-            Buffer ++;//= 250;
+                                       //Buffer = 10000;
+            if(!FlGun2){
+                Buffer = 0;            // if(TimeOut > WaitForNext)Buffer = 0;
+                FlGun2 = true;
+            }
+                                       // TimeOut = 0;
+            Buffer ++;                 //= 250;
             Pin = false;
         }    
         else if (InputPin == false) Pin = true; 
+
+        if(FlGun2 && !Gun) FlGun2 = false;
+
+        if(!WriteBufFlag)Gun = ~ContrGun;
         
-        if(!WriteBufFlag)Gun = ~ContrGun;        
-        
-        if(Block) ;
+        if(Block){
+            if(FlGun && !Gun){
+                FlGun = false;
+                OutGun = true;
+            }
+        }
         else {
             if(!WriteBufFlag)OutGun = ContrGun;
             if(Buffer){
@@ -113,10 +124,7 @@ void main(void){
                     while(cnt_--);
                 }
             }
-            else if (WriteBufFlag) {
-                WriteBufFlag = false;
-                OutGun = true;
-            }    
+            else if (WriteBufFlag && TimeOut < WaitForNext)WriteBufFlag = false; 
         }
     }
 }
