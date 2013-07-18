@@ -66,7 +66,7 @@ void main(void){
             Block = false;
             ClearBlockFlag = false;
         }
-        else if (InputControl2 = false)ClearBlockFlag = true;
+        else if (InputControl2 == false)ClearBlockFlag = true;
 
         #elif PT2272_L4
 
