@@ -80,6 +80,7 @@ void main(void){
 
         #endif
 
+
         if(InputPin == true && Pin){
                                        //Buffer = 10000;
             if(!FlGun2){
@@ -106,7 +107,7 @@ void main(void){
             while(cnt--);
             OutGun = false;
         }
-        
+         
         if(Block);
         else {
             if(!WriteBufFlag)
@@ -135,6 +136,8 @@ void main(void){
                 }
             }
             else if (WriteBufFlag)WriteBufFlag = false; 
+            else if(Gun) OutGun = true;
+                
         }
     }
 }
