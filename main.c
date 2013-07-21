@@ -110,7 +110,6 @@ void main(void){
                 FlGun = false;
                 
             }
-            else if (TimeOut > 3)
                                        // TimeOut = 0;
             Buffer ++;                 //= 250;
             Pin = false;
