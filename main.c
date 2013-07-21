@@ -74,7 +74,7 @@ void main(void){
 
         #endif
 
-        if (TRISIObits.TRISIO0 == true) Gun = ~ContrGun;
+        if (DirectGun == true) Gun = ~ContrGun;
 
         if (Gun == false && FlagGun == false) FlagGun = true;
 
@@ -88,7 +88,7 @@ void main(void){
         }    
         else if (InputPin == false) Pin = true; 
          
-        if(Block) TRISIObits.TRISIO0 = true;
+        if(Block) DirectGun = true;
         else {
             if(Buffer){
                 if (Gun){
@@ -108,7 +108,7 @@ void main(void){
                 }
                 else {
                     cnt_  = 4544;
-                    TRISIObits.TRISIO0  = false;
+                    DirectGun  = false;
                     asm("nop");
                     ContrGun = false;
                     Gun = true;
@@ -117,7 +117,7 @@ void main(void){
             }
             else if(Gun) {
                 ContrGun = true;
-                TRISIObits.TRISIO0 = true;
+                DirectGun = true;
             }
         }
     }
