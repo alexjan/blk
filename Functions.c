@@ -25,12 +25,19 @@ void SetupTMR1(void){
 }
 
 void SetupPins(void){
-  // Init GPIO as digital I/O
+// Init GPIO as digital I/O
      
-    GPIO    = 0b11111011;			 
+    GPIO    = 0b11111111;
+    TRISIO  = 0b11111010;			// 0 - as output, 1 - as input
     WPU     = 0b00100000;			// 0 - Pull-up disabled, 1 - Pull-up enabled
     IOC     = 0b00000000;			// 0 - int-on-change disable, 1 - int-on-change enable
-    
+//                |||||+--> GP0 -> 7 pin
+//                ||||+---> GP1 -> 6 pin
+//                |||+----> GP2 -> 5 pin
+//                ||+-----> GP3 -> 4 pin
+//                |+------> GP4 -> 3 pin
+//                +-------> GP5 -> 2 pin
+
     CMCON  |= 0b00000111;           // All port config as digit i/o
     
     #ifdef _12F675
@@ -39,11 +46,8 @@ void SetupPins(void){
 
     #endif
     
-    TRISIO  = 0b11111010;			// 0 - as output, 1 - as input
-    
     INTE = false;
     INTF = false;
     INTEDG = true;
-    
 }
 
