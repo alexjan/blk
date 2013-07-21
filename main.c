@@ -81,12 +81,16 @@ void main(void){
         #endif
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         if (DirectGun == true) Gun = ~ContrGun;
 
         if (Gun == false && FlagGun == false) FlagGun = true;
 
 >>>>>>> Last
+=======
+
+>>>>>>> 32edcec03e189b1d8135dd5a021c528ca0712597
         if(InputPin == true && Pin){
                                        //Buffer = 10000;
             if(!FlGun2){
@@ -114,7 +118,7 @@ void main(void){
             while(cnt--);
             OutGun = false;
         }
-        
+         
         if(Block);
 =======
          
@@ -154,12 +158,17 @@ void main(void){
             }
 <<<<<<< HEAD
             else if (WriteBufFlag)WriteBufFlag = false; 
+<<<<<<< HEAD
 =======
             else if(Gun) {
                 ContrGun = true;
                 DirectGun = true;
             }
 >>>>>>> Last
+=======
+            else if(Gun) OutGun = true;
+                
+>>>>>>> 32edcec03e189b1d8135dd5a021c528ca0712597
         }
     }
 }
