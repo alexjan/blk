@@ -43,6 +43,7 @@ void main(void){
 	Pin = true;
         BlockFlag = true;
 	RDblock = true;
+	DirectGun = true;
 	TimeOutGun = 0;
         WriteBufFlag  = false;
         while (true){
@@ -55,6 +56,7 @@ void main(void){
                 if(Gun) TimeOutGun++;
                 else TimeOutGun = 0;
                 if(Buffer || WriteBufFlag) TimeOut++;
+                else TimeOut =0;
                 Count10mS = 0;
             }
             CLRWDT();
@@ -67,7 +69,7 @@ void main(void){
         
         #ifdef PT2272_M4
 
-        if(InputControl == true && BlockFlag){
+        if(InputControl && BlockFlag){
             Block = true;
             BlockFlag = false;
 //            DirectGun = true;
@@ -77,7 +79,7 @@ void main(void){
         if(InputControl2 == true && ClearBlockFlag){
             Block = false;
             ClearBlockFlag = false;
-            DirectGun = true;
+   //         DirectGun = true;
         }
         else if (InputControl2 == false)ClearBlockFlag = true;
 
@@ -91,7 +93,8 @@ void main(void){
         
 /************** Read & Control GUN *****************************************/
         
-        if(DirectGun) Gun = ~ContrGun;
+        Gun = ~ContrGun;
+        OutGun = ContrGun;
 
         if(!FlGun && !Gun) FlGun = true;
             
@@ -105,7 +108,9 @@ void main(void){
             if(FlGun){
                 Buffer = 0;            // if(TimeOut > WaitForNext)Buffer = 0;
                 FlGun = false;
+                
             }
+            else if (TimeOut > 3)
                                        // TimeOut = 0;
             Buffer ++;                 //= 250;
             Pin = false;
@@ -118,13 +123,14 @@ void main(void){
 
         if(Block) {
             if(TimeOutGun > 60 && Gun){
-                DirectGun  = false;
-                cnt_  = 35000;
-                ContrGun = false;
+         //       DirectGun  = false;
+                cnt_  = 3500;
+                OutGun = true;
                 while(cnt_--);
                 TimeOutGun = 0;
+               // OutGun = true;
             }
-            DirectGun = true;
+           // DirectGun = true;
         }
         else{
             if(Buffer){
@@ -152,18 +158,18 @@ void main(void){
                     WriteBufFlag  = true;
                 }
             }
-            else {
+            else if (TimeOut > 3){
                 if(TimeOutGun > 60 && Gun){
-                    DirectGun  = false;
-                    cnt_  = 35000;
-                    ContrGun = false;
+             //       DirectGun  = false;
+                    cnt_  = 3500;
+                    OutGun = true;
                     while(cnt_--);
-                    DirectGun = true;
+             //       DirectGun = true;
                     TimeOutGun = 0;
                 }
                 
                 if (WriteBufFlag) {
-                    DirectGun = true;
+               //     DirectGun = true;
                     WriteBufFlag = false;
                 }
             }
