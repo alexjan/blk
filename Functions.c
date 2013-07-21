@@ -1,8 +1,13 @@
 #include <htc.h>
 //#include "main.h" 
 
-#define true 1
-#define false 0
+#define true    1
+#define false   0
+
+extern bit BlockFlag,          \
+           ClearBlockFlag,     \
+           FlGun,              \
+           Pin;
 
 void SetupTMR0(void){
     TMR0 = 150;
@@ -22,6 +27,13 @@ void SetupTMR1(void){
 //            ||+--------- T1CKPS1
 //            |+---------- TMR1GE
 //            +----------- ---
+}
+
+void InitBitVar(void){
+    BlockFlag       = true;
+    ClearBlockFlag  = true;
+    FlGun           = true;
+    Pin             = true;
 }
 
 void SetupPins(void){

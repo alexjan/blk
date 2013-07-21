@@ -1,67 +1,78 @@
 #include <htc.h>
-
 #include "main.h"
-//#include "Functions.c"
-
-// #define _12F629
 
 __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WDTE_ON);	
 
 __IDLOC(FFFF);
 
-volatile unsigned char cnt, TimeOut, TimeOutGun, BlockFlag, ClearBlockFlag, Gun, RDblock, FlGun;
-volatile unsigned char Count200uS,WriteBufFlag, Count10mS, Count1S, Block, Rise, Pin;
-unsigned int Buffer,cnt_;
+#define PT2272_M4
+
+/********** Varianble defination *******************************************/
+
+                 bit    Block,                      \
+                        BlockFlag,                  \
+                        ClearBlockFlag,             \
+                        FlGun,                      \
+                        Gun,                        \
+                        WriteBufFlag,               \
+                        Rise,                       \
+                        Pin;
+
+volatile unsigned char  cnt             = 0,        \
+                        TimeOut         = 0,        \
+                        TimeOutGun      = 0,        \
+                        Count200uS      = 0,        \
+                        Count10mS       = 0,        \
+                        Count1S         = 0;
+
+        unsigned int    Buffer          = 0,        \
+                        count           = 0;
+
+/************** End of Block Variable***************************************/
 
 void main(void){
     
     di();
-	
-    OSCCAL = 0x34; //__osccal_val();
+    OPTION_REG = 0b10001101;                // WDT - 18mS x 32 = 576mS
+    OSCCAL = 0x34;                          //__osccal_val();
     
-    if(!nPOR) {
-    	nPOR = true;				// Detect power on reset 
-    }
-    else if(!nBOD){
-    	nBOD = true;				// Detect brown out
-    }
+    if(!nPOR) nPOR = true;                  // Detect power on reset
+    else if(!nBOD) nBOD = true;             // Detect brown out
+    else if(!nTO);                          // WDT reset enable
+   
+    CLRWDT();
+    SetupPins();
+    SetupTMR0();                            // Setup for internal timer
+    SetupTMR1();                            //Setup for count input impuls
+    PEIE = true;
+    ei();
 
-    else if(!nTO){
-    	CLRWDT();
-    }						// WDT reset enable
-	OPTION_REG = 0b10001101;		// WDT - 18mS x 32 = 576mS
-	CLRWDT();
-	SetupPins();
-	SetupTMR0();                    // Setup for internal timer
-	SetupTMR1();                    //Setup for count input impuls
-	PEIE = true;
-	ei();
-	RunTimer0;
-	RunTimer1;
-	cnt = 0;
-	Rise = false;
-	Pin = true;
-        BlockFlag = true;
-	RDblock = true;
-	DirectGun = true;
-	TimeOutGun = 0;
-        WriteBufFlag  = false;
-        while (true){
+    RunTimer0;
+    RunTimer1;
+
+    InitBitVar();
+
+    while (true){
 
 /*************************** System Timer **********************************/
 
-            if(Count200uS > 50){
+        if(Count200uS > 50){
+
             if(Count10mS++ > 100){
+
                 if(Count1S++ > 120) Count1S = 0;
+
                 if(Gun) TimeOutGun++;
                 else TimeOutGun = 0;
+
                 if(Buffer || WriteBufFlag) TimeOut++;
-                else TimeOut =0;
+                else TimeOut = 0;
+
                 Count10mS = 0;
             }
             CLRWDT();
-            Count200uS = 0;              // count 10 mS
-    	}
+            Count200uS = 0;                 // count 10 mS
+        }
 
 /************* System timer END ********************************************/
         
@@ -72,16 +83,14 @@ void main(void){
         if(InputControl && BlockFlag){
             Block = true;
             BlockFlag = false;
-//            DirectGun = true;
         }
-        else if (InputControl == false) BlockFlag = true;
+        else if (!InputControl) BlockFlag = true;
 
-        if(InputControl2 == true && ClearBlockFlag){
+        if(InputControl2 && ClearBlockFlag){
             Block = false;
             ClearBlockFlag = false;
-   //         DirectGun = true;
         }
-        else if (InputControl2 == false)ClearBlockFlag = true;
+        else if (!InputControl2)ClearBlockFlag = true;
 
         #else #ifdef PT2272_L4
 
@@ -92,44 +101,42 @@ void main(void){
 /************** End block **************************************************/
         
 /************** Read & Control GUN *****************************************/
-        
-        Gun = ~ContrGun;
-        OutGun = ContrGun;
+
+        if(WriteBufFlag){
+            Gun = ~ContrGun;
+            OutGun = ContrGun;
+        }
 
         if(!FlGun && !Gun) FlGun = true;
-            
 
 /**************** End Block ************************************************/
         
 /********** Read Impuls ****************************************************/
         
-        if(InputPin == true && Pin){
-                                       //Buffer = 10000;
-            if(FlGun){
-                Buffer = 0;            // if(TimeOut > WaitForNext)Buffer = 0;
+        if (InputPin && Pin){
+
+            if (FlGun){
+                Buffer = 0;
                 FlGun = false;
-                
             }
-                                       // TimeOut = 0;
-            Buffer ++;                 //= 250;
+
+            Buffer ++;
             Pin = false;
         }    
-        else if (InputPin == false) Pin = true; 
+        else if (!InputPin) Pin = true;
         
-/************ End Block ***************************************************/
+/************ End Block ****************************************************/
         
 /************ Control Blocking *********************************************/
 
-        if(Block) {
-            if(TimeOutGun > 60 && Gun){
-         //       DirectGun  = false;
-                cnt_  = 3500;
+        if (Block) {
+
+            if (TimeOutGun > 60 && Gun){
+                count  = 3500;
                 OutGun = true;
-                while(cnt_--);
+                while(count--);
                 TimeOutGun = 0;
-               // OutGun = true;
             }
-           // DirectGun = true;
         }
         else{
             if(Buffer){
@@ -149,28 +156,24 @@ void main(void){
                     }
                 }
                 else {
-                    cnt_  = 4544;
-                    DirectGun  = false;
+                    count  = 4544;
                     Gun = true;
-                    ContrGun = false;
-                    while(cnt_--);
+                    OutGun = false;
+                    while(count--);
                     WriteBufFlag  = true;
                 }
             }
-            else if (TimeOut > 3){
+            else if (TimeOut > 1){
+
                 if(TimeOutGun > 60 && Gun){
-             //       DirectGun  = false;
-                    cnt_  = 3500;
+                    count  = 3500;
                     OutGun = true;
-                    while(cnt_--);
-             //       DirectGun = true;
+                    while(count--);
                     TimeOutGun = 0;
+                    FlGun = true;
                 }
                 
-                if (WriteBufFlag) {
-               //     DirectGun = true;
-                    WriteBufFlag = false;
-                }
+                if (WriteBufFlag) WriteBufFlag = false;
             }
         }
         
@@ -179,7 +182,9 @@ void main(void){
 }
 
 void interrupt MyInt (void){
+
     if(T0IE && T0IF){
+
         if (Buffer) cnt++;
         else cnt = 0;
         Count200uS++;
