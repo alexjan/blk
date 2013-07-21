@@ -80,17 +80,10 @@ void main(void){
 
         #endif
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
         if (DirectGun == true) Gun = ~ContrGun;
 
-        if (Gun == false && FlagGun == false) FlagGun = true;
+        if (Gun == false && FlGun == false) FlGun = true;
 
->>>>>>> Last
-=======
-
->>>>>>> 32edcec03e189b1d8135dd5a021c528ca0712597
         if(InputPin == true && Pin){
                                        //Buffer = 10000;
             if(!FlGun2){
@@ -102,7 +95,6 @@ void main(void){
             Pin = false;
         }    
         else if (InputPin == false) Pin = true; 
-<<<<<<< HEAD
 
         if(FlGun2 && !Gun) FlGun2 = false;
 
@@ -120,10 +112,8 @@ void main(void){
         }
          
         if(Block);
-=======
          
         if(Block) DirectGun = true;
->>>>>>> Last
         else {
             if(!WriteBufFlag)
             if(Buffer){
@@ -144,31 +134,21 @@ void main(void){
                 }
                 else {
                     cnt_  = 4544;
-<<<<<<< HEAD
                     OutGun = false;
-=======
                     DirectGun  = false;
                     asm("nop");
                     ContrGun = false;
->>>>>>> Last
                     Gun = true;
                     WriteBufFlag  = true;
                     while(cnt_--);
                 }
             }
-<<<<<<< HEAD
             else if (WriteBufFlag)WriteBufFlag = false; 
-<<<<<<< HEAD
-=======
             else if(Gun) {
                 ContrGun = true;
                 DirectGun = true;
             }
->>>>>>> Last
-=======
             else if(Gun) OutGun = true;
-                
->>>>>>> 32edcec03e189b1d8135dd5a021c528ca0712597
         }
     }
 }
