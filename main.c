@@ -119,7 +119,7 @@ void main(void){
         if(Block) {
             if(TimeOutGun > 60 && Gun){
                 DirectGun  = false;
-                cnt_  = 9000;
+                cnt_  = 35000;
                 ContrGun = false;
                 while(cnt_--);
                 TimeOutGun = 0;
@@ -155,7 +155,7 @@ void main(void){
             else {
                 if(TimeOutGun > 60 && Gun){
                     DirectGun  = false;
-                    cnt_  = 9000;
+                    cnt_  = 35000;
                     ContrGun = false;
                     while(cnt_--);
                     DirectGun = true;
