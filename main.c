@@ -13,6 +13,7 @@ __IDLOC(FFFF);
                         BlockFlag,                  \
                         ClearBlockFlag,             \
                         FlGun,                      \
+                        FullBuf,                    \
                         Gun,                        \
                         WriteBufFlag,               \
                         Rise,                       \
@@ -60,12 +61,12 @@ void main(void){
 
             if(Count10mS++ > 100){
 
-                if(Count1S++ > 120) Count1S = 0;
+//                if(Count1S++ > 120) Count1S = 0;
 
                 if(Gun) TimeOutGun++;
                 else TimeOutGun = 0;
 
-                if(Buffer || WriteBufFlag) TimeOut++;
+                if(FullBuf || WriteBufFlag) TimeOut++;
                 else TimeOut = 0;
 
                 Count10mS = 0;
@@ -121,6 +122,7 @@ void main(void){
             }
 
             Buffer ++;
+            FullBuf = true;
             Pin = false;
         }    
         else if (!InputPin) Pin = true;
@@ -139,7 +141,7 @@ void main(void){
             }
         }
         else{
-            if(Buffer){
+            if(FullBuf){
                 if (Gun){
                     if(Rise){
                         if(cnt > WidthImp){
@@ -152,7 +154,7 @@ void main(void){
                         Rise = true;
                         OutputPin = false;
                         cnt = 0;
-                        Buffer--;
+                        if(!Buffer--) FullBuf = false;
                     }
                 }
                 else {
@@ -185,7 +187,7 @@ void interrupt MyInt (void){
 
     if(T0IE && T0IF){
 
-        if (Buffer) cnt++;
+        if (FullBuf) cnt++;
         else cnt = 0;
         Count200uS++;
         TMR0 = 81;
