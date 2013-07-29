@@ -1,13 +1,34 @@
 #include <htc.h>
 #include "main.h"
 
-__CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WDTE_ON);	
+#ifdef _12F629
+
+__CONFIG (FOSC_INTRCIO      \
+        & BOREN_ON          \
+        & CPD_OFF           \
+        & CP_OFF            \
+        & MCLRE_OFF         \
+        & PWRTE_ON          \
+        & WDTE_ON);
+
+#else #ifdef _16F628
+
+__CONFIG (LVP_OFF           \
+        & FOSC_HS           \
+        & BOREN_ON          \
+        & CPD_OFF           \
+        & CP_OFF            \
+        & MCLRE_OFF         \
+        & PWRTE_ON          \
+        & WDTE_ON);
+
+#endif
 
 __IDLOC(FFFF);
 
 #define PT2272_M4
 
-/********** Varianble defination *******************************************/
+/********** Varianble defination **********************************************/
 
                  bit    Block,                      \
                         BlockFlag,                  \
@@ -29,17 +50,22 @@ volatile unsigned char  cnt             = 0,        \
         unsigned int    Buffer          = 0,        \
                         count           = 0;
 
-/************** End of Block Variable***************************************/
+/********** End of Block Variable *********************************************/
 
 void main(void){
     
     di();
     OPTION_REG = 0b10001101;                // WDT - 18mS x 32 = 576mS
+
+    #ifdef _12F629
+
     OSCCAL = 0x34;                          //__osccal_val();
+
+    #endif
     
     if(!nPOR) nPOR = true;                  // Detect power on reset
     else if(!nBOD) nBOD = true;             // Detect brown out
-    else if(!nTO);                          // WDT reset enable
+    else if(!nTO) nTO = true;               // WDT reset enable
    
     CLRWDT();
     SetupPins();
@@ -55,7 +81,7 @@ void main(void){
 
     while (true){
 
-/*************************** System Timer **********************************/
+/*************************** System Timer *************************************/
 
         if(Count200uS > 50){
 
@@ -75,9 +101,9 @@ void main(void){
             Count200uS = 0;                 // count 10 mS
         }
 
-/************* System timer END ********************************************/
+/************* System timer END ***********************************************/
         
- /*********** Control Block out RF reciver**********************************/
+/************ Control Block out RF reciver*************************************/
         
         #ifdef PT2272_M4
 
@@ -99,9 +125,9 @@ void main(void){
 
         #endif
 
-/************** End block **************************************************/
+/************** End block *****************************************************/
         
-/************** Read & Control GUN *****************************************/
+/************** Read & Control GUN ********************************************/
 
         if(WriteBufFlag){
             Gun = ~ContrGun;
@@ -110,9 +136,9 @@ void main(void){
 
         if(!FlGun && !Gun) FlGun = true;
 
-/**************** End Block ************************************************/
+/**************** End Block ***************************************************/
         
-/********** Read Impuls ****************************************************/
+/********** Read Impuls *******************************************************/
         
         if (InputPin && Pin){
 
@@ -127,9 +153,9 @@ void main(void){
         }    
         else if (!InputPin) Pin = true;
         
-/************ End Block ****************************************************/
+/************ End Block *******************************************************/
         
-/************ Control Blocking *********************************************/
+/************ Control Blocking ************************************************/
 
         if (Block) {
 
@@ -179,7 +205,7 @@ void main(void){
             }
         }
         
-/*********** End Block ******************************************************/
+/*********** End Block ********************************************************/
     }
 }
 

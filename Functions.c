@@ -38,7 +38,9 @@ void InitBitVar(void){
 
 void SetupPins(void){
 // Init GPIO as digital I/O
-     
+
+    #ifdef _12F629
+    
     GPIO    = 0b11111111;
     TRISIO  = 0b11111010;			// 0 - as output, 1 - as input
     WPU     = 0b11111111;			// 0 - Pull-up disabled, 1 - Pull-up enabled
@@ -49,6 +51,32 @@ void SetupPins(void){
 //                ||+-----> GP3 -> 4 pin
 //                |+------> GP4 -> 3 pin
 //                +-------> GP5 -> 2 pin
+
+    #else #ifdef _16F628
+
+    PORTA   = 0b11101111;
+    TRISA   = 0b11101111;
+//              |||||||+--> 17 pin
+//              ||||||+---> 18 pin
+//              |||||+---->  1 pin
+//              ||||+----->  2 pin
+//              |||+------>  3 pin
+//              ||+------->  4 pin
+//              |+--------> 15 pin
+//              +---------> 16 pin
+    
+    PORTB   = 0b11110110;
+    TRISB   = 0b11110110;
+//              |||||||+-->  6 pin
+//              ||||||+--->  7 pin
+//              |||||+---->  8 pin
+//              ||||+----->  9 pin
+//              |||+------> 10 pin
+//              ||+-------> 11 pin
+//              |+--------> 12 pin
+//              +---------> 13 pin
+
+    #endif
 
     CMCON  |= 0b00000111;           // All port config as digit i/o
     
@@ -61,5 +89,5 @@ void SetupPins(void){
     INTE = false;
     INTF = false;
     INTEDG = true;
-}
 
+}
