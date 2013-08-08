@@ -5,8 +5,8 @@
 
 __CONFIG (FOSC_INTRCIO      \
         & BOREN_ON          \
-        & CPD_OFF           \
-        & CP_OFF            \
+        & CPD_ON            \
+        & CP_ON            \
         & MCLRE_OFF         \
         & PWRTE_ON          \
         & WDTE_ON);
@@ -14,10 +14,10 @@ __CONFIG (FOSC_INTRCIO      \
 #else #ifdef _16F628
 
 __CONFIG (LVP_OFF           \
-        & FOSC_HS           \
+        & FOSC_INTOSCIO     \
         & BOREN_ON          \
-        & CPD_OFF           \
-        & CP_OFF            \
+        & CPD_ON            \
+        & CP_ALL            \
         & MCLRE_OFF         \
         & PWRTE_ON          \
         & WDTE_ON);
@@ -35,7 +35,7 @@ __IDLOC(FFFF);
                         ClearBlockFlag,             \
                         FlGun,                      \
                         FullBuf,                    \
-                        ModeGun,                        \
+                        ModeGun,                    \
                         WriteBufFlag,               \
                         Rise,                       \
                         Pin;
@@ -53,20 +53,20 @@ volatile unsigned char  cnt             = 0,        \
 /********** End of Block Variable *********************************************/
 
 void main(void){
-    
+
     di();
     OPTION_REG = 0b10001101;                // WDT - 18mS x 32 = 576mS
 
     #ifdef _12F629
 
-    OSCCAL = 0x34;                          //__osccal_val();
+   OSCCAL = __osccal_val();
 
     #endif
-    
+
     if(!nPOR) nPOR = true;                  // Detect power on reset
     else if(!nBOD) nBOD = true;             // Detect brown out
     else if(!nTO) nTO = true;               // WDT reset enable
-   
+
     CLRWDT();
     SetupPins();
     SetupTMR0();                            // Setup for internal timer
@@ -102,9 +102,9 @@ void main(void){
         }
 
 /************* System timer END ***********************************************/
-        
+
 /************ Control Block out RF reciver*************************************/
-        
+
         #ifdef PT2272_M4
 
         if(Block && BlockFlag){
@@ -126,21 +126,27 @@ void main(void){
         #endif
 
 /************** End block *****************************************************/
-        
+
 /************** Read & Control GUN ********************************************/
 
         if(WriteBufFlag){
             ModeGun = ~Gun;
+
+        #ifdef _16F628
+
             Start = Gun;
+        
+        #endif
+
             OGun = Gun;
         }
 
         if(!FlGun && !ModeGun) FlGun = true;
 
 /**************** End Block ***************************************************/
-        
+
 /********** Read Impuls *******************************************************/
-        
+
         if (Impuls && Pin){
 
             if (FlGun){
@@ -151,11 +157,11 @@ void main(void){
             Buffer ++;
             FullBuf = true;
             Pin = false;
-        }    
+        }
         else if (!Impuls) Pin = true;
-        
+
 /************ End Block *******************************************************/
-        
+
 /************ Control Blocking ************************************************/
 
         if (ModeBlock) {
@@ -201,7 +207,7 @@ void main(void){
                     TimeOutGun = 0;
                     FlGun = true;
                 }
-                
+
                 if (WriteBufFlag) WriteBufFlag = false;
             }
         }
@@ -226,5 +232,5 @@ void interrupt MyInt (void){
 
     if(INTE && INTF){
         INTF = false;
-    }   	 
+    }
 }

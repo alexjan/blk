@@ -3,6 +3,7 @@
 #define true            1
 #define false           0
 
+
 #define WaitForNext     20           // Wait for next otpusk in Second
 #define WidthImp        10           // x 200 uS - now 2mS
 #define PauseImp        10           // x 200 uS - now 2mS (F = 250Hz -> 150 l/min)
