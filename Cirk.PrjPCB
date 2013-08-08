@@ -29,7 +29,7 @@ PowerPortNamesTakePriority=0
 PushECOToAnnotationFile=1
 DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
-OutputPath=Project Outputs for Cirk
+OutputPath=
 
 [Document1]
 DocumentPath=CirkPic.SchDoc
@@ -124,7 +124,7 @@ SCH_ShowNote=-1
 SCH_ShowNoteCollapsed=-1
 
 [Generic_EDE]
-OutputDir=Project Outputs for Cirk
+OutputDir=
 
 [OutputGroup1]
 Name=Netlist Outputs

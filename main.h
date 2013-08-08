@@ -9,21 +9,22 @@
 
 #ifdef  _12F629
 
-#define OutGun          GP0          // -> 7 -  Output Control Gun for MINI500
-#define InputControl2   GP1          // -> 6 -  Input from RF Reciver (clear Block)
-#define OutputPin       GP2          // -> 5 -  Output Impuls for MINI500
-#define ContrGun        GP3          // -> 4 -  Input Read Gun from TRK
-#define InputControl    GP4          // -> 3 -  Input from RF Reciver (set Block)
-#define InputPin        GP5          // -> 2 -  Input Impuls from TRK
+#define OGun            GP0          // -> 7 -  Output Control Gun for MINI500
+#define uBlock          GP1          // -> 6 -  Input from RF Reciver (clear Block)
+#define OImpuls         GP2          // -> 5 -  Output Impuls for MINI500
+#define Gun             GP3          // -> 4 -  Input Read Gun from TRK
+#define Block           GP4          // -> 3 -  Input from RF Reciver (set Block)
+#define Impuls          GP5          // -> 2 -  Input Impuls from TRK
 
 #else #ifdef _16F628
 
-#define OutGun          PORTBbits.RB0          // ->  6 -  Output Control Gun for MINI500
-#define InputPin        PORTAbits.RA0          // -> 17 -  Input Impuls from TRK
-#define ContrGun        PORTAbits.RA1          // -> 18 -  Input Read Gun from TRK
-#define InputControl2   PORTAbits.RA2          // ->  1 -  Input from RF Reciver (clear Block)
-#define InputControl    PORTAbits.RA3          // ->  2 -  Input from RF Reciver (set Block)
-#define OutputPin       PORTAbits.RA4          // ->  3 -  Output Impuls for MINI500
+#define OGun            PORTBbits.RB0          // ->  6 -  Output Control Gun for MINI500
+#define Start           PORTBbits.RB3          // ->  9 -  Output Start
+#define Impuls          PORTAbits.RA0          // -> 17 -  Input Impuls from TRK
+#define Gun             PORTAbits.RA1          // -> 18 -  Input Read Gun from TRK
+#define uBlock          PORTAbits.RA2          // ->  1 -  Input from RF Reciver (clear Block)
+#define Block           PORTAbits.RA3          // ->  2 -  Input from RF Reciver (set Block)
+#define OImpuls         PORTAbits.RA4          // ->  3 -  Output Impuls for MINI500
 
 #endif
 

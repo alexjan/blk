@@ -30,12 +30,12 @@ __IDLOC(FFFF);
 
 /********** Varianble defination **********************************************/
 
-                 bit    Block,                      \
+                 bit    ModeBlock,                  \
                         BlockFlag,                  \
                         ClearBlockFlag,             \
                         FlGun,                      \
                         FullBuf,                    \
-                        Gun,                        \
+                        ModeGun,                        \
                         WriteBufFlag,               \
                         Rise,                       \
                         Pin;
@@ -107,21 +107,21 @@ void main(void){
         
         #ifdef PT2272_M4
 
-        if(InputControl && BlockFlag){
-            Block = true;
+        if(Block && BlockFlag){
+            ModeBlock = true;
             BlockFlag = false;
         }
-        else if (!InputControl) BlockFlag = true;
+        else if (!Block) BlockFlag = true;
 
-        if(InputControl2 && ClearBlockFlag){
-            Block = false;
+        if(uBlock && ClearBlockFlag){
+            ModeBlock = false;
             ClearBlockFlag = false;
         }
-        else if (!InputControl2)ClearBlockFlag = true;
+        else if (!uBlock)ClearBlockFlag = true;
 
         #else #ifdef PT2272_L4
 
-            Block = InputControl;
+            ModeBlock = Block;
 
         #endif
 
@@ -130,17 +130,18 @@ void main(void){
 /************** Read & Control GUN ********************************************/
 
         if(WriteBufFlag){
-            Gun = ~ContrGun;
-            OutGun = ContrGun;
+            ModeGun = ~Gun;
+            Start = Gun;
+            OGun = Gun;
         }
 
-        if(!FlGun && !Gun) FlGun = true;
+        if(!FlGun && !ModeGun) FlGun = true;
 
 /**************** End Block ***************************************************/
         
 /********** Read Impuls *******************************************************/
         
-        if (InputPin && Pin){
+        if (Impuls && Pin){
 
             if (FlGun){
                 Buffer = 0;
@@ -151,51 +152,51 @@ void main(void){
             FullBuf = true;
             Pin = false;
         }    
-        else if (!InputPin) Pin = true;
+        else if (!Impuls) Pin = true;
         
 /************ End Block *******************************************************/
         
 /************ Control Blocking ************************************************/
 
-        if (Block) {
+        if (ModeBlock) {
 
-            if (TimeOutGun > 60 && Gun){
+            if (TimeOutGun > 60 && ModeGun){
                 count  = 3500;
-                OutGun = true;
+                OGun = true;
                 while(count--);
                 TimeOutGun = 0;
             }
         }
         else{
             if(FullBuf){
-                if (Gun){
+                if (ModeGun){
                     if(Rise){
                         if(cnt > WidthImp){
-                            OutputPin = true;
+                            Impuls = true;
                             cnt = 0;
                             Rise = false;
                         }
                     }
                     else if(cnt > PauseImp) {
                         Rise = true;
-                        OutputPin = false;
+                        OImpuls = false;
                         cnt = 0;
                         if(!Buffer--) FullBuf = false;
                     }
                 }
                 else {
                     count  = 4544;
-                    Gun = true;
-                    OutGun = false;
+                    ModeGun = true;
+                    OGun = false;
                     while(count--);
                     WriteBufFlag  = true;
                 }
             }
             else if (TimeOut > 1){
 
-                if(TimeOutGun > 60 && Gun){
+                if(TimeOutGun > 60 && ModeGun){
                     count  = 3500;
-                    OutGun = true;
+                    OGun = true;
                     while(count--);
                     TimeOutGun = 0;
                     FlGun = true;
@@ -204,7 +205,6 @@ void main(void){
                 if (WriteBufFlag) WriteBufFlag = false;
             }
         }
-        
 /*********** End Block ********************************************************/
     }
 }
