@@ -1,6 +1,6 @@
 #include <htc.h>
 
-#define PT2272_L4
+#define PT2272_M4
 
 #define true            1
 #define false           0
