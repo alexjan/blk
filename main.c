@@ -59,7 +59,7 @@ void main(void){
 
     #ifdef _12F629
 
-   OSCCAL = __osccal_val();
+//   OSCCAL = __osccal_val();
 
     #endif
 
@@ -89,10 +89,10 @@ void main(void){
 
 //                if(Count1S++ > 120) Count1S = 0;
 
-                if(Gun) TimeOutGun++;
+                if(Gun && (!FullBuf || ModeBlock)) TimeOutGun++;
                 else TimeOutGun = 0;
 
-                if(FullBuf || WriteBufFlag) TimeOut++;
+                if(!FullBuf && !WriteBufFlag) TimeOut++;
                 else TimeOut = 0;
 
                 Count10mS = 0;
@@ -115,6 +115,7 @@ void main(void){
 
         if(uBlock && ClearBlockFlag){
             ModeBlock = false;
+            if(FullBuf) RunWriteBuff();
             ClearBlockFlag = false;
         }
         else if (!uBlock)ClearBlockFlag = true;
@@ -129,19 +130,18 @@ void main(void){
 
 /************** Read & Control GUN ********************************************/
 
-        if(WriteBufFlag){
+        if(!WriteBufFlag){
             ModeGun = ~Gun;
-
-        #ifdef _16F628
-
-            Start = Gun;
-        
-        #endif
-
             OGun = Gun;
+
+            #ifdef _16F628
+
+                Start = Gun;
+
+            #endif
         }
 
-        if(!FlGun && !ModeGun) FlGun = true;
+         if(!FlGun && !ModeGun) FlGun = true;      // if(!FlGun && TimeOut > WaitForNext) FlGun = true;
 
 /**************** End Block ***************************************************/
 
@@ -154,7 +154,7 @@ void main(void){
                 FlGun = false;
             }
 
-            Buffer ++;
+            Buffer++;
             FullBuf = true;
             Pin = false;
         }
@@ -164,14 +164,8 @@ void main(void){
 
 /************ Control Blocking ************************************************/
 
-        if (ModeBlock) {
-
-            if (TimeOutGun > 60 && ModeGun){
-                count  = 3500;
-                OGun = true;
-                while(count--);
-                TimeOutGun = 0;
-            }
+        if (ModeBlock){
+            if(TimeOutGun > 60 && ModeGun) ClearGun();
         }
         else{
             if(FullBuf){
@@ -190,26 +184,12 @@ void main(void){
                         if(!Buffer--) FullBuf = false;
                     }
                 }
-                else {
-                    count  = 4544;
-                    ModeGun = true;
-                    OGun = false;
-                    while(count--);
-                    WriteBufFlag  = true;
-                }
+                else RunWriteBuff();
             }
-            else if (TimeOut > 1){
+            
+            else if (WriteBufFlag) WriteBufFlag = false;
 
-                if(TimeOutGun > 60 && ModeGun){
-                    count  = 3500;
-                    OGun = true;
-                    while(count--);
-                    TimeOutGun = 0;
-                    FlGun = true;
-                }
-
-                if (WriteBufFlag) WriteBufFlag = false;
-            }
+            else if(TimeOutGun > 60 && ModeGun) ClearGun();
         }
 /*********** End Block ********************************************************/
     }

@@ -32,6 +32,17 @@
 #define RunTimer0       T0CS = false;    //Clock Select system CLK
 #define RunTimer1       TMR1ON = true;
 
+#define RunWriteBuff()  count  = 4544;          \
+                        ModeGun = true;         \
+                        OGun = false;           \
+                        while(count--);         \
+                        WriteBufFlag  = true
+
+#define ClearGun()      count  = 3500;          \
+                        OGun = true;            \
+                        while(count--);         \
+                        TimeOutGun = 0
+                        
 void SetupTMR0(void);
 void SetupTMR1(void);
 void SetupPins(void);
