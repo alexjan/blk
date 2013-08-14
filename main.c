@@ -3,17 +3,17 @@
 
 #ifdef _12F629
 
-__CONFIG (FOSC_INTRCIO      \
+__CONFIG(FOSC_INTRCIO       \
         & BOREN_ON          \
         & CPD_ON            \
-        & CP_ON            \
+        & CP_ON             \
         & MCLRE_OFF         \
         & PWRTE_ON          \
         & WDTE_ON);
 
 #else #ifdef _16F628
 
-__CONFIG (LVP_OFF           \
+__CONFIG(LVP_OFF            \
         & FOSC_INTOSCIO     \
         & BOREN_ON          \
         & CPD_ON            \
@@ -30,47 +30,47 @@ __IDLOC(FFFF);
 
 /********** Varianble defination **********************************************/
 
-                 bit    ModeBlock,                  \
-                        BlockFlag,                  \
-                        ClearBlockFlag,             \
-                        FlGun,                      \
-                        FullBuf,                    \
-                        ModeGun,                    \
-                        WriteBufFlag,               \
-                        Rise,                       \
+bit ModeBlock,                              \
+                        BlockFlag,          \
+                        ClearBlockFlag,     \
+                        FlGun,              \
+                        FullBuf,            \
+                        ModeGun,            \
+                        WriteBufFlag,       \
+                        Rise,               \
                         Pin;
 
-volatile unsigned char  cnt             = 0,        \
-                        TimeOut         = 0,        \
-                        TimeOutGun      = 0,        \
-                        Count200uS      = 0,        \
-                        Count10mS       = 0,        \
-                        Count1S         = 0;
+volatile unsigned char cnt = 0,             \
+                        TimeOut = 0,        \
+                        TimeOutGun = 0,     \
+                        Count200uS = 0,     \
+                        Count10mS = 0,      \
+                        Count1S = 0;
 
-        unsigned int    Buffer          = 0,        \
-                        count           = 0;
+unsigned int Buffer = 0,                    \
+                        count = 0;
 
 /********** End of Block Variable *********************************************/
 
-void main(void){
+void main(void) {
 
     di();
-    OPTION_REG = 0b10001101;                // WDT - 18mS x 32 = 576mS
+    OPTION_REG = 0b10001101; // WDT - 18mS x 32 = 576mS
 
-    #ifdef _12F629
+#ifdef _12F629
 
-//   OSCCAL = __osccal_val();
+    //   OSCCAL = __osccal_val();
 
-    #endif
+#endif
 
-    if(!nPOR) nPOR = true;                  // Detect power on reset
-    else if(!nBOD) nBOD = true;             // Detect brown out
-    else if(!nTO) nTO = true;               // WDT reset enable
+    if (!nPOR) nPOR = true; // Detect power on reset
+    else if (!nBOD) nBOD = true; // Detect brown out
+    else if (!nTO) nTO = true; // WDT reset enable
 
     CLRWDT();
     SetupPins();
-    SetupTMR0();                            // Setup for internal timer
-    SetupTMR1();                            //Setup for count input impuls
+    SetupTMR0(); // Setup for internal timer
+    SetupTMR1(); //Setup for count input impuls
     PEIE = true;
     ei();
 
@@ -79,125 +79,129 @@ void main(void){
 
     InitBitVar();
 
-    while (true){
+    while (true) {
 
-/*************************** System Timer *************************************/
+        /*************************** System Timer *****************************/
 
-        if(Count200uS > 50){
+        if (Count200uS > 50) {
 
-            if(Count10mS++ > 100){
+            if (Count10mS++ > 100) {
 
-//                if(Count1S++ > 120) Count1S = 0;
+                //                if(Count1S++ > 120) Count1S = 0;
 
-                if(Gun && (!FullBuf || ModeBlock)) TimeOutGun++;
-                else TimeOutGun = 0;
+                if (ModeGun && !FullBuf) {
+                    if (TimeOutGun++ > 60) {
+                        count = 3500;
+                        OGun = true;
+                        while (count--);
+                        TimeOutGun = 0;
+                    }
+                } else TimeOutGun = 0;
 
-                if(!FullBuf && !WriteBufFlag) TimeOut++;
+                if (!FullBuf && !WriteBufFlag) TimeOut++;
                 else TimeOut = 0;
 
                 Count10mS = 0;
             }
             CLRWDT();
-            Count200uS = 0;                 // count 10 mS
+            Count200uS = 0; // count 10 mS
         }
 
-/************* System timer END ***********************************************/
+        /************* System timer END ***************************************/
 
-/************ Control Block out RF reciver*************************************/
+        /************ Control Block out RF reciver*****************************/
 
-        #ifdef PT2272_M4
+#ifdef PT2272_M4
 
-        if(Block && BlockFlag){
+        if (Block && BlockFlag) {
             ModeBlock = true;
             BlockFlag = false;
-        }
-        else if (!Block) BlockFlag = true;
+        } else if (!Block) BlockFlag = true;
 
-        if(uBlock && ClearBlockFlag){
+        if (uBlock && ClearBlockFlag) {
             ModeBlock = false;
-            if(FullBuf) RunWriteBuff();
+            if (FullBuf) {
+                count = 4544;
+                ModeGun = true;
+                OGun = false;
+                while (count--);
+                WriteBufFlag = true;
+            }
             ClearBlockFlag = false;
-        }
-        else if (!uBlock)ClearBlockFlag = true;
+        } else if (!uBlock)ClearBlockFlag = true;
 
-        #else #ifdef PT2272_L4
+#else #ifdef PT2272_L4
 
-            ModeBlock = Block;
+        ModeBlock = Block;
 
-        #endif
+#endif
 
-/************** End block *****************************************************/
+        /************** End block *********************************************/
 
-/************** Read & Control GUN ********************************************/
+        /************** Read & Control GUN ************************************/
 
-        if(!WriteBufFlag){
-            ModeGun = ~Gun;
+        if (!WriteBufFlag) {
+            ModeGun = !Gun;
             OGun = Gun;
 
-            #ifdef _16F628
+#ifdef _16F628
 
-                Start = Gun;
+            OStart = Gun;
 
-            #endif
+#endif
         }
 
-         if(!FlGun && !ModeGun) FlGun = true;      // if(!FlGun && TimeOut > WaitForNext) FlGun = true;
+        if (!FlGun && !ModeGun) FlGun = true; // if(!FlGun && TimeOut > WaitForNext) FlGun = true;
 
-/**************** End Block ***************************************************/
+        //        OImpuls = ModeBlock;
 
-/********** Read Impuls *******************************************************/
+        /**************** End Block ***************************************************/
 
-        if (Impuls && Pin){
+        /********** Read Impuls *******************************************************/
+        if (ModeGun) {
+            if (Impuls && Pin) {
 
-            if (FlGun){
-                Buffer = 0;
-                FlGun = false;
-            }
+                if (FlGun) {
+                    Buffer = 0;
+                    FlGun = false;
+                }
 
-            Buffer++;
-            FullBuf = true;
-            Pin = false;
+                Buffer++;
+                FullBuf = true;
+                Pin = false;
+            } else if (!Impuls) Pin = true;
         }
-        else if (!Impuls) Pin = true;
 
-/************ End Block *******************************************************/
+        /************ End Block *******************************************************/
 
-/************ Control Blocking ************************************************/
+        /************ Control Blocking ************************************************/
 
-        if (ModeBlock){
-            if(TimeOutGun > 60 && ModeGun) ClearGun();
-        }
-        else{
-            if(FullBuf){
-                if (ModeGun){
-                    if(Rise){
-                        if(cnt > WidthImp){
-                            Impuls = true;
+        if (ModeBlock);
+        else {
+            if (FullBuf) {
+                if (ModeGun) {
+                    if (Rise) {
+                        if (cnt > WidthImp) {
+                            OImpuls = true;
                             cnt = 0;
                             Rise = false;
                         }
-                    }
-                    else if(cnt > PauseImp) {
+                    } else if (cnt > PauseImp) {
                         Rise = true;
                         OImpuls = false;
                         cnt = 0;
-                        if(!Buffer--) FullBuf = false;
+                        if (!Buffer--) FullBuf = false;
                     }
                 }
-                else RunWriteBuff();
-            }
-            
-            else if (WriteBufFlag) WriteBufFlag = false;
-
-            else if(TimeOutGun > 60 && ModeGun) ClearGun();
+            } else if (WriteBufFlag) WriteBufFlag = false;
         }
-/*********** End Block ********************************************************/
+        /*********** End Block ********************************************************/
     }
 }
 
-void interrupt MyInt (void){
+void interrupt MyInt(void) {
 
-    if(T0IE && T0IF){
+    if (T0IE && T0IF) {
 
         if (FullBuf) cnt++;
         else cnt = 0;
@@ -206,11 +210,11 @@ void interrupt MyInt (void){
         T0IF = false;
     }
 
-    if(TMR1IE && TMR1IF){
+    if (TMR1IE && TMR1IF) {
         TMR1IF = false;
     }
 
-    if(INTE && INTF){
+    if (INTE && INTF) {
         INTF = false;
     }
 }
