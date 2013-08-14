@@ -41,4 +41,3 @@
 void SetupTMR0(void);
 void SetupTMR1(void);
 void SetupPins(void);
-void InitBitVar(void);
