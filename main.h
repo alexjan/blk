@@ -23,8 +23,8 @@
 #define Start           PORTBbits.RB3          // ->  9 -  Output Start
 #define Impuls          PORTAbits.RA0          // -> 17 -  Input Impuls from TRK
 #define Gun             PORTAbits.RA1          // -> 18 -  Input Read Gun from TRK
-#define uBlock          PORTAbits.RA2          // ->  1 -  Input from RF Reciver (clear Block)
-#define Block           PORTAbits.RA3          // ->  2 -  Input from RF Reciver (set Block)
+#define uBlock          PORTAbits.RA2          // ->  1 -  Input from RF Reciver (unBlock)
+#define Block           PORTAbits.RA3          // ->  2 -  Input from RF Reciver (Block)
 #define OImpuls         PORTAbits.RA4          // ->  3 -  Output Impuls for MINI500
 
 #endif
