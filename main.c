@@ -9,7 +9,7 @@ __CONFIG (FOSC_INTRCIO & BOREN_ON & CPD_OFF & CP_OFF & MCLRE_OFF & PWRTE_ON & WD
 
 __IDLOC(FFFF);
 
-volatile unsigned char cnt, TimeOut, TimeOutGun, BlockFlag, ClearBlockFlag, Gun, RDblock, FlGun;
+volatile unsigned char Print, cnt, TimeOut, TimeOutGun, BlockFlag, ClearBlockFlag, Gun, RDblock, FlGun;
 volatile unsigned char Count200uS,WriteBufFlag, Count10mS, Count1S, Block, Rise, Pin;
 unsigned int Buffer,cnt_;
 
@@ -46,6 +46,7 @@ void main(void){
 	DirectGun = true;
 	TimeOutGun = 0;
         WriteBufFlag  = false;
+        Print = false;
         while (true){
 
 /*************************** System Timer **********************************/
@@ -96,7 +97,7 @@ void main(void){
         Gun = ~ContrGun;
         OutGun = ContrGun;
 
-        if(!FlGun && !Gun) FlGun = true;
+        if(!FlGun && TimeOut > WaitForNext) FlGun = true;
             
 
 /**************** End Block ************************************************/
@@ -131,10 +132,20 @@ void main(void){
                // OutGun = true;
             }
            // DirectGun = true;
+           if(Buffer)Print = true;
         }
         else{
             if(Buffer){
-                if (Gun){
+                if(Print){
+                    cnt_  = 4544;
+                    DirectGun  = false;
+                    Gun = true;
+                    ContrGun = false;
+                    while(cnt_--);
+                    WriteBufFlag  = true;
+                Print = false;
+                }    
+                 if (Gun){
                     if(Rise){
                         if(cnt > WidthImp){
                             OutputPin = true;
