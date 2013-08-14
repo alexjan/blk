@@ -24,30 +24,30 @@ __CONFIG(LVP_OFF            \
 
 #endif
 
-__IDLOC(FFFF);
+__IDLOC(3010);
 
 #define PT2272_M4
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                              \
-                        BlockFlag,          \
-                        ClearBlockFlag,     \
-                        FlGun,              \
-                        FullBuf,            \
-                        ModeGun,            \
-                        WriteBufFlag,       \
-                        Rise,               \
+bit ModeBlock,                                \
+                        BlockFlag,            \
+                        ClearBlockFlag,       \
+                        FlGun,                \
+                        FullBuf,              \
+                        ModeGun,              \
+                        WriteBufFlag,         \
+                        Rise,                 \
                         Pin;
 
-volatile unsigned char cnt = 0,             \
-                        TimeOut = 0,        \
-                        TimeOutGun = 0,     \
-                        Count200uS = 0,     \
-                        Count10mS = 0,      \
+volatile unsigned char cnt = 0,               \
+                        TimeOut = 0,          \
+                        TimeOutGun = 0,       \
+                        Count200uS = 0,       \
+                        Count10mS = 0,        \
                         Count1S = 0;
 
-unsigned int Buffer = 0,                    \
+unsigned int Buffer = 0,                      \
                         count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -77,8 +77,6 @@ void main(void) {
     RunTimer0;
     RunTimer1;
 
-    InitBitVar();
-
     while (true) {
 
         /*************************** System Timer *****************************/
@@ -89,10 +87,11 @@ void main(void) {
 
                 //                if(Count1S++ > 120) Count1S = 0;
 
-                if (ModeGun && !FullBuf) {
+                if (ModeGun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
                         OGun = true;
+                        OStart = true;
                         while (count--);
                         TimeOutGun = 0;
                     }
@@ -121,12 +120,14 @@ void main(void) {
         if (uBlock && ClearBlockFlag) {
             ModeBlock = false;
             if (FullBuf) {
-                count = 4544;
+                //                count = 4544;
                 ModeGun = true;
                 OGun = false;
-                while (count--);
+                //                while (count--);
                 WriteBufFlag = true;
             }
+            //            Buffer = 500;
+            //            FullBuf = true;
             ClearBlockFlag = false;
         } else if (!uBlock)ClearBlockFlag = true;
 
@@ -146,18 +147,18 @@ void main(void) {
 
 #ifdef _16F628
 
-            OStart = Gun;
+            OStart = !Gun;
 
 #endif
         }
 
-        if (!FlGun && !ModeGun) FlGun = true; // if(!FlGun && TimeOut > WaitForNext) FlGun = true;
+        if (!FlGun && !ModeGun) FlGun = true;
 
         //        OImpuls = ModeBlock;
 
-        /**************** End Block ***************************************************/
+        /**************** End Block *******************************************/
 
-        /********** Read Impuls *******************************************************/
+        /********** Read Impuls ***********************************************/
         if (ModeGun) {
             if (Impuls && Pin) {
 
@@ -168,13 +169,14 @@ void main(void) {
 
                 Buffer++;
                 FullBuf = true;
+                if (!ModeBlock) TimeOutGun = 0;
                 Pin = false;
             } else if (!Impuls) Pin = true;
         }
 
-        /************ End Block *******************************************************/
+        /************ End Block ***********************************************/
 
-        /************ Control Blocking ************************************************/
+        /************ Control Blocking ****************************************/
 
         if (ModeBlock);
         else {
@@ -195,7 +197,7 @@ void main(void) {
                 }
             } else if (WriteBufFlag) WriteBufFlag = false;
         }
-        /*********** End Block ********************************************************/
+        /*********** End Block ************************************************/
     }
 }
 

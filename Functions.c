@@ -4,12 +4,6 @@
 #define true    1
 #define false   0
 
-extern bit BlockFlag,             \
-           ClearBlockFlag,        \
-           FlGun,                 \
-           Pin,                   \
-            WriteBufFlag;
-
 void SetupTMR0(void) {
     TMR0 = 150;
     T0IE = true;
@@ -28,14 +22,6 @@ void SetupTMR1(void) {
     //        ||+--------- T1CKPS1
     //        |+---------- TMR1GE
     //        +----------- ---
-}
-
-void InitBitVar(void) {
-    WriteBufFlag = false;
-    BlockFlag = true;
-    ClearBlockFlag = true;
-    FlGun = true;
-    Pin = true;
 }
 
 void SetupPins(void) {
@@ -91,5 +77,4 @@ void SetupPins(void) {
     INTE = false;
     INTF = false;
     INTEDG = true;
-
 }
