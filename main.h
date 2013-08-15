@@ -20,12 +20,12 @@
 #else #ifdef _16F628
 
 #define OGun            PORTBbits.RB0          // ->  6 -  Output Control Gun for MINI500
-#define Start           PORTBbits.RB3          // ->  9 -  Output Start
-#define Impuls          PORTAbits.RA0          // -> 17 -  Input Impuls from TRK
-#define Gun             PORTAbits.RA1          // -> 18 -  Input Read Gun from TRK
-#define uBlock          PORTAbits.RA2          // ->  1 -  Input from RF Reciver (unBlock)
-#define Block           PORTAbits.RA3          // ->  2 -  Input from RF Reciver (Block)
-#define OImpuls         PORTAbits.RA4          // ->  3 -  Output Impuls for MINI500
+#define OStart          PORTBbits.RB3          // ->  9 -  Output Start
+#define Block           PORTAbits.RA0          // -> 17 -  Input Impuls from TRK
+#define uBlock          PORTAbits.RA1          // -> 18 -  Input Read Gun from TRK
+#define Impuls          PORTAbits.RA2          // ->  1 -  Input from RF Reciver (clear Block)
+#define OImpuls         PORTAbits.RA3          // ->  2 -  Input from RF Reciver (set Block)
+#define Gun             PORTAbits.RA4          // ->  3 -  Output Impuls for MINI500
 
 #endif
 
@@ -38,12 +38,6 @@
                         while(count--);         \
                         WriteBufFlag  = true
 
-#define ClearGun()      count  = 3500;          \
-                        OGun = true;            \
-                        while(count--);         \
-                        TimeOutGun = 0
-                        
 void SetupTMR0(void);
 void SetupTMR1(void);
 void SetupPins(void);
-void InitBitVar(void);
