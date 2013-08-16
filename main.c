@@ -33,19 +33,17 @@ __IDLOC(3010);
 bit ModeBlock,                                                \
                         BlockFlag,                            \
                         ClearBlockFlag,                       \
-                        ResBuf,                                \
+                        ResBuf,                               \
                         FullBuf,                              \
                         ModeGun,                              \
-                        WriteBufFlag,                         \
+                        BlockGun,                           \
                         Rise,                                 \
                         Pin;
 
 volatile unsigned char cnt = 0,                               \
-                        TimeOut = 0,                          \
                         TimeOutGun = 0,                       \
                         Count200uS = 0,                       \
-                        Count10mS = 0,                        \
-                        Count1S = 0;
+                        Count10mS = 0;
 
 unsigned int Buffer = 0,                                      \
                         count = 0;
@@ -82,11 +80,7 @@ void main(void) {
         /*************************** System Timer *****************************/
 
         if (Count200uS > 50) {
-
             if (Count10mS++ > 100) {
-
-                //                if(Count1S++ > 120) Count1S = 0;
-
                 if (ModeGun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
@@ -96,14 +90,10 @@ void main(void) {
                         TimeOutGun = 0;
                     }
                 } else TimeOutGun = 0;
-
-                //                if (!FullBuf && !WriteBufFlag) TimeOut++;
-                //                else TimeOut = 0;
-
                 Count10mS = 0;
             }
             CLRWDT();
-            Count200uS = 0; // count 10 mS
+            Count200uS = 0; 
         }
 
         /************* System timer END ***************************************/
@@ -124,7 +114,7 @@ void main(void) {
                 ModeGun = true;
                 OGun = false;
                 while (count--);
-                WriteBufFlag = true;
+                BlockGun = true;
             }
             ClearBlockFlag = false;
         } else if (!uBlock)ClearBlockFlag = true;
@@ -139,7 +129,7 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (!WriteBufFlag) {
+        if (!BlockGun) {
             ModeGun = !Gun;
             OGun = Gun;
 
@@ -185,7 +175,7 @@ void main(void) {
                         OImpuls = false;
                         cnt = 0;
                         if (!Buffer--) {
-                            WriteBufFlag = false;
+                            BlockGun = false;
                             FullBuf = false;
                         }
                     }
@@ -199,7 +189,6 @@ void main(void) {
 void interrupt MyInt(void) {
 
     if (T0IE && T0IF) {
-
         if (FullBuf) cnt++;
         else cnt = 0;
         Count200uS++;
