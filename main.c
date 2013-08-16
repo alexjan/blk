@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(304c);
+__IDLOC(305a);
 
 #ifdef _12F629
 
@@ -32,22 +32,22 @@ __CONFIG(LVP_OFF            \
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                                 \
-                        BlockFlag,                             \
-                        ClearBlockFlag,                        \
-                        ResBuf,                                \
-                        FullBuf,                               \
-                        ModeGun,                               \
-                        BlockGun,                              \
-                        Rise,                                  \
+bit ModeBlock,                                                          \
+                        BlockFlag,                                      \
+                        ClearBlockFlag,                                 \
+                        ResBuf,                                         \
+                        FullBuf,                                        \
+                        ModeGun,                                        \
+                        BlockGun,                                       \
+                        Rise,                                           \
                         Pin;
 
-volatile unsigned char cnt = 0,                                \
-                        TimeOutGun = 0,                        \
-                        Count200uS = 0,                        \
+volatile unsigned char cnt = 0,                                         \
+                        TimeOutGun = 0,                                 \
+                        Count200uS = 0,                                 \
                         Count10mS = 0;
 
-unsigned int Buffer = 0,                                       \
+unsigned int Buffer = 0,                                                \
                         count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -160,8 +160,7 @@ void main(void) {
 
         /************ Control Blocking ****************************************/
 
-        if (ModeBlock);
-        else if (FullBuf && ModeGun) {
+        if (!ModeBlock && FullBuf && ModeGun) {
             if (Rise) {
                 if (cnt > WidthImp) {
                     OImpuls = true;
@@ -177,7 +176,6 @@ void main(void) {
                     FullBuf = false;
                 }
             }
-
         }
         /*********** End Block ************************************************/
     }
