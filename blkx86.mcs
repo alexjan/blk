@@ -1,0 +1,318 @@
+[Header]
+MagicCookie={0b13fe8c-dfe0-40eb-8900-6712719559a7}
+Version=1.0
+[File000]
+Location=D:\PRJ\blk\OutDIR\Functions.p1
+Folder=Intermediary
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File001]
+Location=D:\PRJ\blk\OutDIR\main.p1
+Folder=Intermediary
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File002]
+Location=D:\PRJ\blk\OutDIR\blkx86.cof
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File003]
+Location=D:\PRJ\blk\OutDIR\blkx86.hex
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File004]
+Location=D:\PRJ\blk\OutDIR\blkx86.sym
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File005]
+Location=D:\PRJ\blk\OutDIR\blkx86.map
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File006]
+Location=D:\PRJ\blk\OutDIR\blkx86.hxl
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File007]
+Location=D:\PRJ\blk\OutDIR\startup.lst
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File008]
+Location=D:\PRJ\blk\OutDIR\startup.rlf
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File009]
+Location=D:\PRJ\blk\OutDIR\doprnt.p1
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File010]
+Location=D:\PRJ\blk\OutDIR\doprnt.pre
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File011]
+Location=D:\PRJ\blk\OutDIR\blkx86.obj
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File012]
+Location=D:\PRJ\blk\OutDIR\blkx86.lst
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File013]
+Location=D:\PRJ\blk\OutDIR\blkx86.rlf
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
+[File014]
+Location=D:\PRJ\blk\OutDIR\blkx86.sdb
+Folder=Output
+<<<<<<< HEAD
+DeviceName=PIC16F628
+=======
+DeviceName=PIC12F629
+>>>>>>> test
+LanguageToolSuiteID={507D93FD-16F1-4270-980F-0C7C0207E6D3}
+LanguageToolID={0F51667C-2BAF-4EF8-A2C9-AB83788A793D}
+LanguageToolLocation=C:\Program Files\HI-TECH Software\PICC\9.83\bin\picc.exe
+PPAD=$(BINDIR)|D:\PRJ\blk\OutDIR||$(TMPDIR)||$(AINDIR)||$(INCDIR)||$(LIBDIR)||$(LKRDIR)||
+SOLK=<src>|Functions.c|main.c||<obj>||<lib>||<lkr>||
+SuiteArgsString=
+<<<<<<< HEAD
+ToolArgsString=C6=31 DB=0 DC=9 DF=0 DD=1 C2=0 C3=0 DE=1 D7=1 11E=0 121=0 122=0 123=0 124=0 125=0 11F=94 C9=5 F5=0 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0 
+=======
+ToolArgsString=C9=5 F5=0 E5=0 E7=0 E8=0 126=0 F1=0 F6= F7= B9=-1 107=0
+>>>>>>> test
+TraceCmdString=
+DebugOptions=
