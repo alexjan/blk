@@ -129,7 +129,10 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (!BlockGun) ModeGun = !OGun = Gun;
+        if (!BlockGun) {
+            ModeGun = !Gun;
+            OGun = Gun;
+        }
 
         /**************** End Block *******************************************/
 
