@@ -10,20 +10,6 @@ void SetupTMR0(void) {
     T0IF = false;
 }
 
-void SetupTMR1(void) {
-    TMR1IE = true;
-    TMR1IF = false;
-    T1CON = 0b00000010;
-    //        |||||||+---- TMR1ON
-    //        ||||||+----- TMR1CS
-    //        |||||+------ nT1SYNC
-    //        ||||+------- T1OSCEN
-    //        |||+-------- T1CKPS0
-    //        ||+--------- T1CKPS1
-    //        |+---------- TMR1GE
-    //        +----------- ---
-}
-
 void SetupPins(void) {
     // Init GPIO as digital I/O
 
@@ -74,7 +60,4 @@ void SetupPins(void) {
 
 #endif
 
-    INTE = false;
-    INTF = false;
-    INTEDG = true;
 }
