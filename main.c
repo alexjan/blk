@@ -156,8 +156,7 @@ void main(void) {
         if (ModeGun) {
             if (Impuls && Pin) {
                 if (ResBuf && ModeBlock) {
-                    Buffer = 0;
-                    Buffer--;
+                    Buffer = 0xFFFF;
                     ResBuf = false;
                 }
                 Buffer++;
