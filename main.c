@@ -1,6 +1,8 @@
 #include <htc.h>
 #include "main.h"
 
+__IDLOC(305a);
+
 #ifdef _12F629
 
 __CONFIG(FOSC_INTRCIO       \
@@ -24,51 +26,29 @@ __CONFIG(LVP_OFF            \
 
 #endif
 
-__IDLOC(3010);
+
 
 #define PT2272_M4
 
 /********** Varianble defination **********************************************/
 
-<<<<<<< HEAD
-bit ModeBlock,                                                \
-                        BlockFlag,                            \
-                        ClearBlockFlag,                       \
-                        ResBuf,                                \
-                        FullBuf,                              \
-                        ModeGun,                              \
-                        WriteBufFlag,                         \
-                        Rise,                                 \
+
+bit ModeBlock,                             \
+                        BlockFlag,         \
+                        ClearBlockFlag,    \
+                        ResBuf,            \
+                        FullBuf,           \
+                        ModeGun,           \
+                        BlockGun,          \
+                        Rise,              \
                         Pin;
 
-volatile unsigned char cnt = 0,                               \
-                        TimeOut = 0,                          \
-                        TimeOutGun = 0,                       \
-                        Count200uS = 0,                       \
-                        Count10mS = 0,                        \
-                        Count1S = 0;
+volatile unsigned char cnt = 0,            \
+                        TimeOutGun = 0,    \
+                        Count200uS = 0,    \
+                        Count10mS = 0;
 
-unsigned int Buffer = 0,                                      \
-=======
-bit ModeBlock,                                     \
-                        BlockFlag,                 \
-                        ClearBlockFlag,            \
-                        FlGun,                     \
-                        FullBuf,                   \
-                        ModeGun,                   \
-                        WriteBufFlag,              \
-                        Rise,                      \
-                        Pin;
-
-volatile unsigned char cnt = 0,                    \
-                        TimeOut = 0,               \
-                        TimeOutGun = 0,            \
-                        Count200uS = 0,            \
-                        Count10mS = 0,             \
-                        Count1S = 0;
-
-unsigned int Buffer = 0,                           \
->>>>>>> local/patch
+unsigned int Buffer = 0,                   \
                         count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -80,7 +60,7 @@ void main(void) {
 
 #ifdef _12F629
 
-    //   OSCCAL = __osccal_val();
+    OSCCAL = __osccal_val();
 
 #endif
 
@@ -90,43 +70,30 @@ void main(void) {
 
     CLRWDT();
     SetupPins();
-    SetupTMR0(); // Setup for internal timer
-    SetupTMR1(); //Setup for count input impuls
+    SetupTMR0();
     PEIE = true;
     ei();
 
     RunTimer0;
-    RunTimer1;
 
     while (true) {
 
         /*************************** System Timer *****************************/
 
         if (Count200uS > 50) {
-
             if (Count10mS++ > 100) {
                 if (ModeGun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
                         OGun = true;
-                        OStart = true;
                         while (count--);
                         TimeOutGun = 0;
                     }
                 } else TimeOutGun = 0;
-
-<<<<<<< HEAD
-                //                if (!FullBuf && !WriteBufFlag) TimeOut++;
-                //                else TimeOut = 0;
-=======
-                if (!FullBuf) TimeOut++;
-                else TimeOut = 0;
->>>>>>> local/patch
-
                 Count10mS = 0;
             }
             CLRWDT();
-            Count200uS = 0; // count 10 mS
+            Count200uS = 0;
         }
 
         /************* System timer END ***************************************/
@@ -147,11 +114,7 @@ void main(void) {
                 ModeGun = true;
                 OGun = false;
                 while (count--);
-<<<<<<< HEAD
-                WriteBufFlag = true;
-=======
-                WriteBufFlag = false;
->>>>>>> local/patch
+                BlockGun = true;
             }
             ClearBlockFlag = false;
         } else if (!uBlock)ClearBlockFlag = true;
@@ -166,69 +129,29 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (WriteBufFlag) {
-            ModeGun = !Gun;
-            OGun = Gun;
+        if (!BlockGun) ModeGun = OGun = !Gun;
 
-#ifdef _16F628
-
-            OStart = !Gun;
-
-#endif
-        }
-
-<<<<<<< HEAD
-=======
-        if (!FlGun && !ModeGun) FlGun = true;
->>>>>>> local/patch
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
         if (ModeGun) {
             if (Impuls && Pin) {
-<<<<<<< HEAD
                 if (ResBuf && ModeBlock) {
                     Buffer = 0xFFFF;
                     ResBuf = false;
                 }
-=======
-                if (FlGun) Buffer = 0;
->>>>>>> local/patch
                 Buffer++;
-                FlGun = false;
                 FullBuf = true;
                 if (!ModeBlock) TimeOutGun = 0;
                 Pin = false;
             } else if (!Impuls) Pin = true;
-        } else if (!ResBuf) ResBuf = true;
+        } else ResBuf = true;
 
         /************ End Block ***********************************************/
 
         /************ Control Blocking ****************************************/
 
-        if (ModeBlock);
-<<<<<<< HEAD
-        else {
-            if (FullBuf) {
-                if (ModeGun) {
-                    if (Rise) {
-                        if (cnt > WidthImp) {
-                            OImpuls = true;
-                            cnt = 0;
-                            Rise = false;
-                        }
-                    } else if (cnt > PauseImp) {
-                        Rise = true;
-                        OImpuls = false;
-                        cnt = 0;
-                        if (!Buffer--) {
-                            WriteBufFlag = false;
-                            FullBuf = false;
-                        }
-                    }
-                }
-=======
-        else if (FullBuf) {
+        if (!ModeBlock && FullBuf && ModeGun) {
             if (Rise) {
                 if (cnt > WidthImp) {
                     OImpuls = true;
@@ -240,10 +163,9 @@ void main(void) {
                 OImpuls = false;
                 cnt = 0;
                 if (!Buffer--) {
-                    WriteBufFlag = true;
+                    BlockGun = false;
                     FullBuf = false;
                 }
->>>>>>> local/patch
             }
         }
 
@@ -252,21 +174,11 @@ void main(void) {
 }
 
 void interrupt MyInt(void) {
-
     if (T0IE && T0IF) {
-
         if (FullBuf) cnt++;
         else cnt = 0;
         Count200uS++;
         TMR0 = 81;
         T0IF = false;
-    }
-
-    if (TMR1IE && TMR1IF) {
-        TMR1IF = false;
-    }
-
-    if (INTE && INTF) {
-        INTF = false;
     }
 }
