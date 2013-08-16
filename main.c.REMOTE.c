@@ -30,7 +30,6 @@ __IDLOC(3010);
 
 /********** Varianble defination **********************************************/
 
-<<<<<<< HEAD
 bit ModeBlock,                                                \
                         BlockFlag,                            \
                         ClearBlockFlag,                       \
@@ -49,26 +48,6 @@ volatile unsigned char cnt = 0,                               \
                         Count1S = 0;
 
 unsigned int Buffer = 0,                                      \
-=======
-bit ModeBlock,                                     \
-                        BlockFlag,                 \
-                        ClearBlockFlag,            \
-                        FlGun,                     \
-                        FullBuf,                   \
-                        ModeGun,                   \
-                        WriteBufFlag,              \
-                        Rise,                      \
-                        Pin;
-
-volatile unsigned char cnt = 0,                    \
-                        TimeOut = 0,               \
-                        TimeOutGun = 0,            \
-                        Count200uS = 0,            \
-                        Count10mS = 0,             \
-                        Count1S = 0;
-
-unsigned int Buffer = 0,                           \
->>>>>>> local/patch
                         count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -105,6 +84,9 @@ void main(void) {
         if (Count200uS > 50) {
 
             if (Count10mS++ > 100) {
+
+                //                if(Count1S++ > 120) Count1S = 0;
+
                 if (ModeGun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
@@ -115,13 +97,8 @@ void main(void) {
                     }
                 } else TimeOutGun = 0;
 
-<<<<<<< HEAD
                 //                if (!FullBuf && !WriteBufFlag) TimeOut++;
                 //                else TimeOut = 0;
-=======
-                if (!FullBuf) TimeOut++;
-                else TimeOut = 0;
->>>>>>> local/patch
 
                 Count10mS = 0;
             }
@@ -147,11 +124,7 @@ void main(void) {
                 ModeGun = true;
                 OGun = false;
                 while (count--);
-<<<<<<< HEAD
                 WriteBufFlag = true;
-=======
-                WriteBufFlag = false;
->>>>>>> local/patch
             }
             ClearBlockFlag = false;
         } else if (!uBlock)ClearBlockFlag = true;
@@ -166,7 +139,7 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (WriteBufFlag) {
+        if (!WriteBufFlag) {
             ModeGun = !Gun;
             OGun = Gun;
 
@@ -177,25 +150,16 @@ void main(void) {
 #endif
         }
 
-<<<<<<< HEAD
-=======
-        if (!FlGun && !ModeGun) FlGun = true;
->>>>>>> local/patch
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
         if (ModeGun) {
             if (Impuls && Pin) {
-<<<<<<< HEAD
                 if (ResBuf && ModeBlock) {
                     Buffer = 0xFFFF;
                     ResBuf = false;
                 }
-=======
-                if (FlGun) Buffer = 0;
->>>>>>> local/patch
                 Buffer++;
-                FlGun = false;
                 FullBuf = true;
                 if (!ModeBlock) TimeOutGun = 0;
                 Pin = false;
@@ -207,7 +171,6 @@ void main(void) {
         /************ Control Blocking ****************************************/
 
         if (ModeBlock);
-<<<<<<< HEAD
         else {
             if (FullBuf) {
                 if (ModeGun) {
@@ -227,26 +190,8 @@ void main(void) {
                         }
                     }
                 }
-=======
-        else if (FullBuf) {
-            if (Rise) {
-                if (cnt > WidthImp) {
-                    OImpuls = true;
-                    cnt = 0;
-                    Rise = false;
-                }
-            } else if (cnt > PauseImp) {
-                Rise = true;
-                OImpuls = false;
-                cnt = 0;
-                if (!Buffer--) {
-                    WriteBufFlag = true;
-                    FullBuf = false;
-                }
->>>>>>> local/patch
             }
         }
-
         /*********** End Block ************************************************/
     }
 }
