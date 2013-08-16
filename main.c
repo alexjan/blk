@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(305a);
+__IDLOC(306a);
 
 #ifdef _12F629
 
@@ -33,7 +33,7 @@ __CONFIG(LVP_OFF            \
 /********** Varianble defination **********************************************/
 
 
-bit ModeBlock,                             \
+                    bit ModeBlock,         \
                         BlockFlag,         \
                         ClearBlockFlag,    \
                         ResBuf,            \
@@ -43,13 +43,13 @@ bit ModeBlock,                             \
                         Rise,              \
                         Pin;
 
-volatile unsigned char cnt = 0,            \
-                        TimeOutGun = 0,    \
-                        Count200uS = 0,    \
-                        Count10mS = 0;
+volatile unsigned char  cnt         = 0,   \
+                        TimeOutGun  = 0,   \
+                        Count200uS  = 0,   \
+                        Count10mS   = 0;
 
-unsigned int Buffer = 0,                   \
-                        count = 0;
+          unsigned int  Buffer      = 0,   \
+                        count       = 0;
 
 /********** End of Block Variable *********************************************/
 
@@ -129,7 +129,7 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (!BlockGun) ModeGun = OGun = !Gun;
+        if (!BlockGun) ModeGun = !OGun = Gun;
 
         /**************** End Block *******************************************/
 
