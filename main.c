@@ -30,24 +30,24 @@ __IDLOC(3010);
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                 \
-                        BlockFlag,             \
-                        ClearBlockFlag,        \
-                        FlGun,                 \
-                        FullBuf,               \
-                        ModeGun,               \
-                        WriteBufFlag,          \
-                        Rise,                  \
+bit ModeBlock,                                               \
+                        BlockFlag,                           \
+                        ClearBlockFlag,                      \
+                        ResBuf,                               \
+                        FullBuf,                             \
+                        ModeGun,                             \
+                        WriteBufFlag,                        \
+                        Rise,                                \
                         Pin;
 
-volatile unsigned char cnt = 0,                \
-                        TimeOut = 0,           \
-                        TimeOutGun = 0,        \
-                        Count200uS = 0,        \
-                        Count10mS = 0,         \
+volatile unsigned char cnt = 0,                              \
+                        TimeOut = 0,                         \
+                        TimeOutGun = 0,                      \
+                        Count200uS = 0,                      \
+                        Count10mS = 0,                       \
                         Count1S = 0;
 
-unsigned int Buffer = 0,                       \
+unsigned int Buffer = 0,                                     \
                         count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -97,8 +97,8 @@ void main(void) {
                     }
                 } else TimeOutGun = 0;
 
-                if (!FullBuf && !WriteBufFlag) TimeOut++;
-                else TimeOut = 0;
+                //                if (!FullBuf && !WriteBufFlag) TimeOut++;
+                //                else TimeOut = 0;
 
                 Count10mS = 0;
             }
@@ -150,27 +150,22 @@ void main(void) {
 #endif
         }
 
-//        if (!FlGun && !ModeGun) FlGun = true;
-
-        //        OImpuls = ModeBlock;
-
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
         if (ModeGun) {
             if (Impuls && Pin) {
-
-                if (FlGun) {
+                if (ResBuf && ModeBlock) {
                     Buffer = 0;
-                    FlGun = false;
+                    Buffer--;
+                    ResBuf = false;
                 }
-
                 Buffer++;
                 FullBuf = true;
                 if (!ModeBlock) TimeOutGun = 0;
                 Pin = false;
             } else if (!Impuls) Pin = true;
-        }
+        } else if (!ResBuf) ResBuf = true;
 
         /************ End Block ***********************************************/
 
@@ -190,10 +185,13 @@ void main(void) {
                         Rise = true;
                         OImpuls = false;
                         cnt = 0;
-                        if (!Buffer--) FullBuf = false;
+                        if (!Buffer--) {
+                            WriteBufFlag = false;
+                            FullBuf = false;
+                        }
                     }
                 }
-            } else if (WriteBufFlag) WriteBufFlag = false;
+            }
         }
         /*********** End Block ************************************************/
     }
