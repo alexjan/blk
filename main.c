@@ -30,24 +30,24 @@ __IDLOC(3010);
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                               \
-                        BlockFlag,                           \
-                        ClearBlockFlag,                      \
-                        ResBuf,                               \
-                        FullBuf,                             \
-                        ModeGun,                             \
-                        WriteBufFlag,                        \
-                        Rise,                                \
+bit ModeBlock,                                                \
+                        BlockFlag,                            \
+                        ClearBlockFlag,                       \
+                        ResBuf,                                \
+                        FullBuf,                              \
+                        ModeGun,                              \
+                        WriteBufFlag,                         \
+                        Rise,                                 \
                         Pin;
 
-volatile unsigned char cnt = 0,                              \
-                        TimeOut = 0,                         \
-                        TimeOutGun = 0,                      \
-                        Count200uS = 0,                      \
-                        Count10mS = 0,                       \
+volatile unsigned char cnt = 0,                               \
+                        TimeOut = 0,                          \
+                        TimeOutGun = 0,                       \
+                        Count200uS = 0,                       \
+                        Count10mS = 0,                        \
                         Count1S = 0;
 
-unsigned int Buffer = 0,                                     \
+unsigned int Buffer = 0,                                      \
                         count = 0;
 
 /********** End of Block Variable *********************************************/
