@@ -1,6 +1,8 @@
 #include <htc.h>
 #include "main.h"
 
+__IDLOC(304c);
+
 #ifdef _12F629
 
 __CONFIG(FOSC_INTRCIO       \
@@ -24,28 +26,28 @@ __CONFIG(LVP_OFF            \
 
 #endif
 
-__IDLOC(3010);
+
 
 #define PT2272_M4
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                                \
-                        BlockFlag,                            \
-                        ClearBlockFlag,                       \
-                        ResBuf,                               \
-                        FullBuf,                              \
-                        ModeGun,                              \
-                        BlockGun,                           \
-                        Rise,                                 \
+bit ModeBlock,                                                 \
+                        BlockFlag,                             \
+                        ClearBlockFlag,                        \
+                        ResBuf,                                \
+                        FullBuf,                               \
+                        ModeGun,                               \
+                        BlockGun,                              \
+                        Rise,                                  \
                         Pin;
 
-volatile unsigned char cnt = 0,                               \
-                        TimeOutGun = 0,                       \
-                        Count200uS = 0,                       \
+volatile unsigned char cnt = 0,                                \
+                        TimeOutGun = 0,                        \
+                        Count200uS = 0,                        \
                         Count10mS = 0;
 
-unsigned int Buffer = 0,                                      \
+unsigned int Buffer = 0,                                       \
                         count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -67,13 +69,11 @@ void main(void) {
 
     CLRWDT();
     SetupPins();
-    SetupTMR0(); // Setup for internal timer
-    SetupTMR1(); //Setup for count input impuls
+    SetupTMR0();
     PEIE = true;
     ei();
 
     RunTimer0;
-    RunTimer1;
 
     while (true) {
 
@@ -93,7 +93,7 @@ void main(void) {
                 Count10mS = 0;
             }
             CLRWDT();
-            Count200uS = 0; 
+            Count200uS = 0;
         }
 
         /************* System timer END ***************************************/
@@ -161,46 +161,34 @@ void main(void) {
         /************ Control Blocking ****************************************/
 
         if (ModeBlock);
-        else {
-            if (FullBuf) {
-                if (ModeGun) {
-                    if (Rise) {
-                        if (cnt > WidthImp) {
-                            OImpuls = true;
-                            cnt = 0;
-                            Rise = false;
-                        }
-                    } else if (cnt > PauseImp) {
-                        Rise = true;
-                        OImpuls = false;
-                        cnt = 0;
-                        if (!Buffer--) {
-                            BlockGun = false;
-                            FullBuf = false;
-                        }
-                    }
+        else if (FullBuf && ModeGun) {
+            if (Rise) {
+                if (cnt > WidthImp) {
+                    OImpuls = true;
+                    cnt = 0;
+                    Rise = false;
+                }
+            } else if (cnt > PauseImp) {
+                Rise = true;
+                OImpuls = false;
+                cnt = 0;
+                if (!Buffer--) {
+                    BlockGun = false;
+                    FullBuf = false;
                 }
             }
+
         }
         /*********** End Block ************************************************/
     }
 }
 
 void interrupt MyInt(void) {
-
     if (T0IE && T0IF) {
         if (FullBuf) cnt++;
         else cnt = 0;
         Count200uS++;
         TMR0 = 81;
         T0IF = false;
-    }
-
-    if (TMR1IE && TMR1IF) {
-        TMR1IF = false;
-    }
-
-    if (INTE && INTF) {
-        INTF = false;
     }
 }

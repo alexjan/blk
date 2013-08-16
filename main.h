@@ -30,8 +30,6 @@
 #endif
 
 #define RunTimer0       T0CS = false;    //Clock Select system CLK
-#define RunTimer1       TMR1ON = true;
 
 void SetupTMR0(void);
-void SetupTMR1(void);
 void SetupPins(void);
