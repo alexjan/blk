@@ -1,27 +1,27 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(306a);
+__IDLOC(307a);
 
 #ifdef _12F629
 
-__CONFIG(FOSC_INTRCIO       \
-        & BOREN_ON          \
-        & CPD_ON            \
-        & CP_ON             \
-        & MCLRE_OFF         \
-        & PWRTE_ON          \
+__CONFIG(FOSC_INTRCIO                                                          \
+        & BOREN_ON                                                             \
+        & CPD_ON                                                               \
+        & CP_ON                                                                \
+        & MCLRE_OFF                                                            \
+        & PWRTE_ON                                                             \
         & WDTE_ON);
 
 #else #ifdef _16F628
 
-__CONFIG(LVP_OFF            \
-        & FOSC_INTOSCIO     \
-        & BOREN_ON          \
-        & CPD_ON            \
-        & CP_ALL            \
-        & MCLRE_OFF         \
-        & PWRTE_ON          \
+__CONFIG(LVP_OFF                                                               \
+        & FOSC_INTOSCIO                                                        \
+        & BOREN_ON                                                             \
+        & CPD_ON                                                               \
+        & CP_ALL                                                               \
+        & MCLRE_OFF                                                            \
+        & PWRTE_ON                                                             \
         & WDTE_ON);
 
 #endif
@@ -33,30 +33,33 @@ __CONFIG(LVP_OFF            \
 /********** Varianble defination **********************************************/
 
 
-                    bit ModeBlock,         \
-                        BlockFlag,         \
-                        ClearBlockFlag,    \
-                        ResBuf,            \
-                        FullBuf,           \
-                        ModeGun,           \
-                        BlockGun,          \
-                        Rise,              \
-                        Pin;
+bit ModeBlock,                                                                 \
+    BlockFlag,                                                                 \
+    ClearBlockFlag,                                                            \
+    ResBuf,                                                                    \
+    FullBuf,                                                                   \
+    BlockGun,                                                                  \
+    ModeGun,                                                                   \
+    Rise,                                                                      \
+    flgWDT,                                                                    \
+    Pin;
 
-volatile unsigned char  cnt         = 0,   \
-                        TimeOutGun  = 0,   \
-                        Count200uS  = 0,   \
-                        Count10mS   = 0;
+volatile unsigned char cnt = 0,                                                \
+                       TimeOutGun = 0,                                         \
+                       Count200uS = 0,                                         \
+                       Count10mS = 0;
 
-          unsigned int  Buffer      = 0,   \
-                        count       = 0;
+unsigned int Buffer = 0,                                                       \
+             count = 0;
 
 /********** End of Block Variable *********************************************/
 
 void main(void) {
 
     di();
-    OPTION_REG = 0b10001101; // WDT - 18mS x 32 = 576mS
+    OPTION_REG = 0b10001111; // WDT(nom)- 18mS x 128 = 2304mS                  \
+                                WDT(min) - 7mS x 128 = 896mS                   \
+                                WDT(max) - 33mS x 128 = 4224mS
 
 #ifdef _12F629
 
@@ -64,11 +67,31 @@ void main(void) {
 
 #endif
 
-    if (!nPOR) nPOR = true; // Detect power on reset
-    else if (!nBOD) nBOD = true; // Detect brown out
-    else if (!nTO) nTO = true; // WDT reset enable
+    if (!nPOR || !nBOD) {
+        SLEEP();
+    } else {
+        if (nTO) {
+            if (!nPD) {
+                // MCLR Reset during SLEEP
+            } else {
+                // MCLR Reset
+            }
+        } else {
+            if (!nPD) {
+                // WDT Reset during SLEEP
+            } else {
+                // WDT Reset 
+            }
+        }
+    }
 
-    CLRWDT();
+    PCON |= 0b00000011;
+    //              |+---> nBOD
+    //              +----> nPOR
+    STATUS |= 0b00011000;
+    //             |+----> nPD
+    //             +-----> nTO
+
     SetupPins();
     SetupTMR0();
     PEIE = true;
