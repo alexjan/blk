@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(307a);
+__IDLOC(308a);
 
 #ifdef _12F629
 
@@ -41,10 +41,10 @@ bit ModeBlock,                                                                 \
     BlockGun,                                                                  \
     ModeGun,                                                                   \
     Rise,                                                                      \
-    flgWDT,                                                                    \
     Pin;
 
 volatile unsigned char cnt = 0,                                                \
+                       TimeOut = 0,                                            \
                        TimeOutGun = 0,                                         \
                        Count200uS = 0,                                         \
                        Count10mS = 0;
@@ -113,6 +113,10 @@ void main(void) {
                         TimeOutGun = 0;
                     }
                 } else TimeOutGun = 0;
+                
+                if(FullBuf)TimeOut = 0;
+                else if(TimeOut < 3)TimeOut++;
+                else BlockGun = false;
                 Count10mS = 0;
             }
             CLRWDT();
@@ -188,12 +192,12 @@ void main(void) {
                 Rise = true;
                 OImpuls = false;
                 cnt = 0;
-                if (!Buffer--) {
-                    BlockGun = false;
-                    FullBuf = false;
-                }
+                //TimeOut = 0;
+                if (!Buffer--) FullBuf = false;                
             }
         }
+        
+        //if(TimeOut > 5 && !FullBuf) BlockGun = false;
 
         /*********** End Block ************************************************/
     }
