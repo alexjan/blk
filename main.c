@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(308a);
+__IDLOC(308b);
 
 #ifdef _12F629
 
@@ -13,7 +13,7 @@ __CONFIG(FOSC_INTRCIO                                                          \
         & PWRTE_ON                                                             \
         & WDTE_ON);
 
-#else #ifdef _16F628
+#elif _16F628
 
 __CONFIG(LVP_OFF                                                               \
         & FOSC_INTOSCIO                                                        \
@@ -24,14 +24,22 @@ __CONFIG(LVP_OFF                                                               \
         & PWRTE_ON                                                             \
         & WDTE_ON);
 
+#elif  _16F628A
+
+__CONFIG(LVP_OFF                                                               \
+        & FOSC_INTOSCIO                                                        \
+        & BOREN_ON                                                             \
+        & CPD_ON                                                               \
+        & CP_ON                                                               \
+        & MCLRE_OFF                                                            \
+        & PWRTE_ON                                                             \
+        & WDTE_ON);
+
 #endif
-
-
 
 #define PT2272_M4
 
 /********** Varianble defination **********************************************/
-
 
 bit ModeBlock,                                                                 \
     BlockFlag,                                                                 \
