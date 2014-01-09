@@ -30,7 +30,7 @@ __CONFIG(LVP_OFF                                                               \
         & FOSC_INTOSCIO                                                        \
         & BOREN_ON                                                             \
         & CPD_ON                                                               \
-        & CP_ON                                                               \
+        & CP_ON                                                                \
         & MCLRE_OFF                                                            \
         & PWRTE_ON                                                             \
         & WDTE_ON);

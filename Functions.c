@@ -12,8 +12,21 @@ void SetupTMR0(void) {
 
 void SetupPins(void) {
     // Init GPIO as digital I/O
+#ifdef _12F675
 
-#ifdef _12F629
+    ANSEL &= 0b11110000;
+    GPIO = 0b11111111;
+    TRISIO = 0b11111010; // 0 - as output, 1 - as input
+    WPU = 0b11111111; // 0 - Pull-up disabled, 1 - Pull-up enabled
+    IOC = 0b00000000; // 0 - int-on-change disable, 1 - int-on-change enable
+    //      |||||+--> GP0 -> 7 pin
+    //      ||||+---> GP1 -> 6 pin
+    //      |||+----> GP2 -> 5 pin
+    //      ||+-----> GP3 -> 4 pin
+    //      |+------> GP4 -> 3 pin
+    //      +-------> GP5 -> 2 pin
+
+#elif _12F629 
 
     GPIO = 0b11111111;
     TRISIO = 0b11111010; // 0 - as output, 1 - as input
@@ -26,9 +39,10 @@ void SetupPins(void) {
     //      |+------> GP4 -> 3 pin
     //      +-------> GP5 -> 2 pin
 
-#else #ifdef _16F628
 
-    PORTA = 0b11100111;
+#elif _16F628 || _16F628A
+
+    PORTA = 0b11111111;
     TRISA = 0b11110111;
     //        |||||||+--> 17 pin --> Block
     //        ||||||+---> 18 pin --> uBlock
@@ -53,11 +67,5 @@ void SetupPins(void) {
 #endif
 
     CMCON |= 0b00000111; // All port config as digit i/o
-
-#ifdef _12F675
-
-    ANSEL |= 0b00001111;
-
-#endif
 
 }
