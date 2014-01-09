@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(308b);
+__IDLOC(308c);
 
 #ifdef _12F629
 
@@ -41,23 +41,24 @@ __CONFIG(LVP_OFF                                                               \
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                                                 \
-    BlockFlag,                                                                 \
-    ClearBlockFlag,                                                            \
-    ResBuf,                                                                    \
-    FullBuf,                                                                   \
-    BlockGun,                                                                  \
-    ModeGun,                                                                   \
-    Rise,                                                                      \
+bit ModeBlock,                                                                    \
+    BlockFlag,                                                                    \
+    ClearBlockFlag,                                                               \
+    ResBuf,                                                                       \
+    FullBuf,                                                                      \
+    BlockGun,                                                                     \
+    ModeGun,                                                                      \
+    Rise,                                                                         \
+    RunInit,                                                                      \
     Pin;
 
-volatile unsigned char cnt = 0,                                                \
-                       TimeOut = 0,                                            \
-                       TimeOutGun = 0,                                         \
-                       Count200uS = 0,                                         \
+volatile unsigned char cnt = 0,                                                   \
+                       TimeOut = 0,                                               \
+                       TimeOutGun = 0,                                            \
+                       Count200uS = 0,                                            \
                        Count10mS = 0;
 
-unsigned int Buffer = 0,                                                       \
+unsigned int Buffer = 0,                                                          \
              count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -65,9 +66,6 @@ unsigned int Buffer = 0,                                                       \
 void main(void) {
 
     di();
-    OPTION_REG = 0b10001111; // WDT(nom)- 18mS x 128 = 2304mS                  \
-                                WDT(min) - 7mS x 128 = 896mS                   \
-                                WDT(max) - 33mS x 128 = 4224mS
 
 #ifdef _12F629
 
@@ -75,37 +73,41 @@ void main(void) {
 
 #endif
 
-    if (!nPOR || !nBOD) {
-        SLEEP();
-    } else {
-        if (nTO) {
-            if (!nPD) {
-                // MCLR Reset during SLEEP
-            } else {
-                // MCLR Reset
+    OPTION_REG = 0b10001111; // WDT(nom)- 18mS x 128 = 2304mS                  \
+                                WDT(min) - 7mS x 128 = 896mS                   \
+                                WDT(max) - 33mS x 128 = 4224mS
+
+    RunInit = false;
+
+    if (nPOR) {
+        if (nBOR) {
+            if (!nTO) {
+                if (nPD) {
+                    RunInit = true; // WDT Reset 
+                } else; // WDT Wake-up
             }
         } else {
-            if (!nPD) {
-                // WDT Reset during SLEEP
-            } else {
-                // WDT Reset 
-            }
+            RunInit = true; //Brown-out Reset
         }
+    } else if (!nTO || !nPD) {
+        RunInit = true; //Power-on Reset
     }
 
-    PCON |= 0b00000011;
-    //              |+---> nBOD
-    //              +----> nPOR
-    STATUS |= 0b00011000;
-    //             |+----> nPD
-    //             +-----> nTO
+    if (RunInit) {
+        //        PCON |= 0b00000011;
+        //                        |+---> nBOD
+        //                        +----> nPOR
+        STATUS |= 0b00011000;
+        //             |+----> nPD
+        //             +-----> nTO
+        SetupPins();
+        SetupTMR0();
+        RunInit = false;
+        PEIE = true;
+        RunTimer0;
+    }
 
-    SetupPins();
-    SetupTMR0();
-    PEIE = true;
     ei();
-
-    RunTimer0;
 
     while (true) {
 
@@ -121,9 +123,9 @@ void main(void) {
                         TimeOutGun = 0;
                     }
                 } else TimeOutGun = 0;
-                
-                if(FullBuf)TimeOut = 0;
-                else if(TimeOut < 3)TimeOut++;
+
+                if (FullBuf)TimeOut = 0;
+                else if (TimeOut < 3)TimeOut++;
                 else BlockGun = false;
                 Count10mS = 0;
             }
@@ -201,10 +203,10 @@ void main(void) {
                 OImpuls = false;
                 cnt = 0;
                 //TimeOut = 0;
-                if (!Buffer--) FullBuf = false;                
+                if (!Buffer--) FullBuf = false;
             }
         }
-        
+
         //if(TimeOut > 5 && !FullBuf) BlockGun = false;
 
         /*********** End Block ************************************************/
