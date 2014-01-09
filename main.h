@@ -8,7 +8,7 @@
 #define WidthImp        10           // x 200 uS - now 2mS
 #define PauseImp        10           // x 200 uS - now 2mS (F = 250Hz -> 150 l/min)
 
-#ifdef  _12F629
+#ifdef  _12F629 
 
 #define OGun            GP0          // -> 7 -  Output Control Gun for MINI500
 #define uBlock          GP1          // -> 6 -  Input from RF Reciver (clear Block)
@@ -17,7 +17,16 @@
 #define Block           GP4          // -> 3 -  Input from RF Reciver (set Block)
 #define Impuls          GP5          // -> 2 -  Input Impuls from TRK
 
-#else #ifdef _16F628
+#elif _12F675
+
+#define OGun            GP0          // -> 7 -  Output Control Gun for MINI500
+#define uBlock          GP1          // -> 6 -  Input from RF Reciver (clear Block)
+#define OImpuls         GP2          // -> 5 -  Output Impuls for MINI500
+#define Gun             GP3          // -> 4 -  Input Read Gun from TRK
+#define Block           GP4          // -> 3 -  Input from RF Reciver (set Block)
+#define Impuls          GP5          // -> 2 -  Input Impuls from TRK
+
+#elif _16F628 || _16F628A
 
 #define OGun            PORTBbits.RB0          // ->  6 -  Output Control Gun for MINI500
 #define OStart          PORTBbits.RB3          // ->  9 -  Output Start

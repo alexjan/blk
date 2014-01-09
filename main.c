@@ -13,6 +13,16 @@ __CONFIG(FOSC_INTRCIO                                                          \
         & PWRTE_ON                                                             \
         & WDTE_ON);
 
+#elif _12F675
+
+__CONFIG(FOSC_INTRCIO                                                          \
+        & BOREN_ON                                                             \
+        & CPD_ON                                                               \
+        & CP_ON                                                                \
+        & MCLRE_OFF                                                            \
+        & PWRTE_ON                                                             \
+        & WDTE_ON);
+
 #elif _16F628
 
 __CONFIG(LVP_OFF                                                               \
@@ -41,24 +51,24 @@ __CONFIG(LVP_OFF                                                               \
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                                                    \
-    BlockFlag,                                                                    \
-    ClearBlockFlag,                                                               \
-    ResBuf,                                                                       \
-    FullBuf,                                                                      \
-    BlockGun,                                                                     \
-    ModeGun,                                                                      \
-    Rise,                                                                         \
-    RunInit,                                                                      \
+bit ModeBlock,                                                                 \
+    BlockFlag,                                                                 \
+    ClearBlockFlag,                                                            \
+    ResBuf,                                                                    \
+    FullBuf,                                                                   \
+    BlockGun,                                                                  \
+    ModeGun,                                                                   \
+    Rise,                                                                      \
+    RunInit,                                                                   \
     Pin;
 
-volatile unsigned char cnt = 0,                                                   \
-                       TimeOut = 0,                                               \
-                       TimeOutGun = 0,                                            \
-                       Count200uS = 0,                                            \
+volatile unsigned char cnt = 0,                                                \
+                       TimeOut = 0,                                            \
+                       TimeOutGun = 0,                                         \
+                       Count200uS = 0,                                         \
                        Count10mS = 0;
 
-unsigned int Buffer = 0,                                                          \
+unsigned int Buffer = 0,                                                       \
              count = 0;
 
 /********** End of Block Variable *********************************************/
@@ -83,8 +93,9 @@ void main(void) {
         if (nBOR) {
             if (!nTO) {
                 if (nPD) {
-                    RunInit = true; // WDT Reset 
-                } else; // WDT Wake-up
+                    RunInit = true; // WDT Reset
+                    // Here Set error.....
+                } else; // WDT Wake-up "Nothing"
             }
         } else {
             RunInit = true; //Brown-out Reset

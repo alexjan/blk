@@ -12,9 +12,8 @@ void SetupTMR0(void) {
 
 void SetupPins(void) {
     // Init GPIO as digital I/O
-#ifdef _12F675
+#ifdef _12F629
 
-    ANSEL &= 0b11110000;
     GPIO = 0b11111111;
     TRISIO = 0b11111010; // 0 - as output, 1 - as input
     WPU = 0b11111111; // 0 - Pull-up disabled, 1 - Pull-up enabled
@@ -26,8 +25,9 @@ void SetupPins(void) {
     //      |+------> GP4 -> 3 pin
     //      +-------> GP5 -> 2 pin
 
-#elif _12F629 
+#elif _12F675
 
+    ANSEL &= 0b11110000;
     GPIO = 0b11111111;
     TRISIO = 0b11111010; // 0 - as output, 1 - as input
     WPU = 0b11111111; // 0 - Pull-up disabled, 1 - Pull-up enabled
