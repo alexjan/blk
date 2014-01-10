@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(309a);
+__IDLOC(310a);
 
 #ifdef _12F629
 
@@ -52,11 +52,9 @@ __CONFIG(LVP_OFF                                                               \
 /********** Varianble defination **********************************************/
 
 bit ModeBlock,                                                                 \
-    BlockFlag,                                                                 \
     ResBuf,                                                                    \
     FullBuf,                                                                   \
-    BlockGun,                                                                  \
-    ModeGun,                                                                   \
+    uBlockGun,                                                                 \
     Rise,                                                                      \
     RunInit,                                                                   \
     RDimpuls;
@@ -124,7 +122,7 @@ void main(void) {
 
         if (Count200uS > 50) {
             if (Count10mS++ > 100) {
-                if (ModeGun && (!FullBuf || ModeBlock)) {
+                if (!OGun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
                         OGun = true;
@@ -149,11 +147,11 @@ void main(void) {
                 ModeBlock = false;
                 if (FullBuf) {
                     count = 4544;
-                    ModeGun = true;
+//                    ModeGun = true;
                     OGun = false;
                     while (count--);
-                    BlockGun = true;
                 }
+                uBlockGun = false;
             }
         } else if (Block) ModeBlock = true;
 
@@ -167,35 +165,34 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (!BlockGun) {
-            ModeGun = !Gun;
+        if (uBlockGun) {
+//            ModeGun = !Gun;
             OGun = Gun;
         }
 
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
-        if (ModeGun) { //???? ???????? ???? (?? ????? ????????? ????, ???? ?????? ??????????), ??
+        if (Gun) ResBuf = true;
+        else { //???? ???????? ???? (?? ????? ????????? ????, ???? ?????? ??????????), ??
             if (Impuls) {
                 if (RDimpuls) {
-                    if (ModeBlock) { //???? ???? ????????? ??????? ?????????? ? ????? ?????????? ???????, ??
-                        if (ResBuf) {
-                            Buffer = 0xFFFF; //???????? ??????, ???????? ???? ????????? ???????
-                            ResBuf = false;
-                        }
-                    } else TimeOutGun = 0;
+                    if (ResBuf) { //???? ???? ????????? ??????? ?????????? ? ????? ?????????? ???????, ??
+                        Buffer = 0xFFFF; //???????? ??????, ???????? ???? ????????? ???????
+                        ResBuf = false;
+                    }
                     Buffer++; //????????? ?????? ?? ???????
                     FullBuf = true; //?????????? ???? ?????? ?????
                     RDimpuls = false;
                 }
             } else RDimpuls = true;
-        } else ResBuf = true;
+        }
 
         /************ End Block ***********************************************/
 
         /************ Control Blocking ****************************************/
 
-        if (!ModeBlock && FullBuf && ModeGun) {
+        if (!ModeBlock && FullBuf && !OGun) {
             if (Rise) {
                 if (cnt > WidthImp) {
                     OImpuls = true;
@@ -207,7 +204,7 @@ void main(void) {
                 OImpuls = false;
                 cnt = 0;
                 if (!Buffer--) {
-                    BlockGun = false;
+                    uBlockGun = true;
                     FullBuf = false;
                 }
             }
