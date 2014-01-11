@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(310a);
+__IDLOC(310b);
 
 #ifdef _12F629
 
@@ -122,7 +122,7 @@ void main(void) {
 
         if (Count200uS > 50) {
             if (Count10mS++ > 100) {
-                if (!OGun && (!FullBuf || ModeBlock)) {
+                if (!Gun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
                         OGun = true;
@@ -147,7 +147,7 @@ void main(void) {
                 ModeBlock = false;
                 if (FullBuf) {
                     count = 4544;
-//                    ModeGun = true;
+
                     OGun = false;
                     while (count--);
                 }
@@ -165,24 +165,21 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (uBlockGun) {
-//            ModeGun = !Gun;
-            OGun = Gun;
-        }
-
+        if (uBlockGun) OGun = Gun;
+        
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
         if (Gun) ResBuf = true;
-        else { //???? ???????? ???? (?? ????? ????????? ????, ???? ?????? ??????????), ??
+        else { 
             if (Impuls) {
                 if (RDimpuls) {
-                    if (ResBuf) { //???? ???? ????????? ??????? ?????????? ? ????? ?????????? ???????, ??
-                        Buffer = 0xFFFF; //???????? ??????, ???????? ???? ????????? ???????
+                    if (ResBuf) { 
+                        Buffer = 0xFFFF; 
                         ResBuf = false;
                     }
-                    Buffer++; //????????? ?????? ?? ???????
-                    FullBuf = true; //?????????? ???? ?????? ?????
+                    Buffer++; 
+                    FullBuf = true; 
                     RDimpuls = false;
                 }
             } else RDimpuls = true;
@@ -192,7 +189,7 @@ void main(void) {
 
         /************ Control Blocking ****************************************/
 
-        if (!ModeBlock && FullBuf && !OGun) {
+        if (!ModeBlock && FullBuf && !Gun) {
             if (Rise) {
                 if (cnt > WidthImp) {
                     OImpuls = true;
