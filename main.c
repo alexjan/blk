@@ -51,21 +51,21 @@ __CONFIG(LVP_OFF                                                               \
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                                                 \
-    ResBuf,                                                                    \
-    FullBuf,                                                                   \
-    uBlockGun,                                                                 \
-    Rise,                                                                      \
-    RunInit,                                                                   \
+bit ModeBlock,                                                                \
+    ResBuf,                                                                   \
+    FullBuf,                                                                  \
+    uBlockGun,                                                                \
+    Rise,                                                                     \
+    RunInit,                                                                  \
     RDimpuls;
 
-volatile unsigned char cnt = 0,                                                \
-                       TimeOutGun = 0,                                         \
-                       Count200uS = 0,                                         \
-                       Count10mS = 0;
+volatile unsigned char cnt,                                                   \
+                       TimeOutGun,                                            \
+                       Count200uS,                                            \
+                       Count10mS;
 
-unsigned int Buffer = 0,                                                       \
-             count = 0;
+unsigned int Buffer,                                                          \
+             count;
 
 /********** End of Block Variable *********************************************/
 
@@ -101,6 +101,9 @@ void main(void) {
     }
 
     if (RunInit) {
+        cnt = 0;
+        TimeOutGun = 0;
+        Buffer = 0;
         //        PCON |= 0b00000011;
         //                        |+---> nBOD
         //                        +----> nPOR
@@ -166,20 +169,20 @@ void main(void) {
         /************** Read & Control GUN ************************************/
 
         if (uBlockGun) OGun = Gun;
-        
+
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
         if (Gun) ResBuf = true;
-        else { 
+        else {
             if (Impuls) {
                 if (RDimpuls) {
-                    if (ResBuf) { 
-                        Buffer = 0xFFFF; 
+                    if (ResBuf) {
+                        Buffer = 0xFFFF;
                         ResBuf = false;
                     }
-                    Buffer++; 
-                    FullBuf = true; 
+                    Buffer++;
+                    FullBuf = true;
                     RDimpuls = false;
                 }
             } else RDimpuls = true;
