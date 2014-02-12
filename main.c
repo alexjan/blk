@@ -1,7 +1,7 @@
 #include <htc.h>
 #include "main.h"
 
-__IDLOC(308c);
+__IDLOC(310b);
 
 #ifdef _12F629
 
@@ -51,25 +51,21 @@ __CONFIG(LVP_OFF                                                               \
 
 /********** Varianble defination **********************************************/
 
-bit ModeBlock,                                                                 \
-    BlockFlag,                                                                 \
-    ClearBlockFlag,                                                            \
-    ResBuf,                                                                    \
-    FullBuf,                                                                   \
-    BlockGun,                                                                  \
-    ModeGun,                                                                   \
-    Rise,                                                                      \
-    RunInit,                                                                   \
-    Pin;
+bit ModeBlock,                                                                \
+    ResBuf,                                                                   \
+    FullBuf,                                                                  \
+    uBlockGun,                                                                \
+    Rise,                                                                     \
+    RunInit,                                                                  \
+    RDimpuls;
 
-volatile unsigned char cnt = 0,                                                \
-                       TimeOut = 0,                                            \
-                       TimeOutGun = 0,                                         \
-                       Count200uS = 0,                                         \
-                       Count10mS = 0;
+volatile unsigned char cnt,                                                   \
+                       TimeOutGun,                                            \
+                       Count200uS,                                            \
+                       Count10mS;
 
-unsigned int Buffer = 0,                                                       \
-             count = 0;
+unsigned int Buffer,                                                          \
+             count;
 
 /********** End of Block Variable *********************************************/
 
@@ -105,6 +101,9 @@ void main(void) {
     }
 
     if (RunInit) {
+        cnt = 0;
+        TimeOutGun = 0;
+        Buffer = 0;
         //        PCON |= 0b00000011;
         //                        |+---> nBOD
         //                        +----> nPOR
@@ -126,7 +125,7 @@ void main(void) {
 
         if (Count200uS > 50) {
             if (Count10mS++ > 100) {
-                if (ModeGun && (!FullBuf || ModeBlock)) {
+                if (!Gun && (!FullBuf || ModeBlock)) {
                     if (TimeOutGun++ > 60) {
                         count = 3500;
                         OGun = true;
@@ -134,10 +133,6 @@ void main(void) {
                         TimeOutGun = 0;
                     }
                 } else TimeOutGun = 0;
-
-                if (FullBuf)TimeOut = 0;
-                else if (TimeOut < 3)TimeOut++;
-                else BlockGun = false;
                 Count10mS = 0;
             }
             CLRWDT();
@@ -150,24 +145,20 @@ void main(void) {
 
 #ifdef PT2272_M4
 
-        if (Block && BlockFlag) {
-            ModeBlock = true;
-            BlockFlag = false;
-        } else if (!Block) BlockFlag = true;
+        if (ModeBlock) {
+            if (uBlock) {
+                ModeBlock = false;
+                if (FullBuf) {
+                    count = 4544;
 
-        if (uBlock && ClearBlockFlag) {
-            ModeBlock = false;
-            if (FullBuf) {
-                count = 4544;
-                ModeGun = true;
-                OGun = false;
-                while (count--);
-                BlockGun = true;
+                    OGun = false;
+                    while (count--);
+                }
+                uBlockGun = false;
             }
-            ClearBlockFlag = false;
-        } else if (!uBlock)ClearBlockFlag = true;
+        } else if (Block) ModeBlock = true;
 
-#else #ifdef PT2272_L4
+#elif PT2272_L4
 
         ModeBlock = Block;
 
@@ -177,32 +168,31 @@ void main(void) {
 
         /************** Read & Control GUN ************************************/
 
-        if (!BlockGun) {
-            ModeGun = !Gun;
-            OGun = Gun;
-        }
+        if (uBlockGun) OGun = Gun;
 
         /**************** End Block *******************************************/
 
         /********** Read Impuls ***********************************************/
-        if (ModeGun) {
-            if (Impuls && Pin) {
-                if (ResBuf && ModeBlock) {
-                    Buffer = 0xFFFF;
-                    ResBuf = false;
+        if (Gun) ResBuf = true;
+        else {
+            if (Impuls) {
+                if (RDimpuls) {
+                    if (ResBuf) {
+                        Buffer = 0xFFFF;
+                        ResBuf = false;
+                    }
+                    Buffer++;
+                    FullBuf = true;
+                    RDimpuls = false;
                 }
-                Buffer++;
-                FullBuf = true;
-                if (!ModeBlock) TimeOutGun = 0;
-                Pin = false;
-            } else if (!Impuls) Pin = true;
-        } else ResBuf = true;
+            } else RDimpuls = true;
+        }
 
         /************ End Block ***********************************************/
 
         /************ Control Blocking ****************************************/
 
-        if (!ModeBlock && FullBuf && ModeGun) {
+        if (!ModeBlock && FullBuf && !Gun) {
             if (Rise) {
                 if (cnt > WidthImp) {
                     OImpuls = true;
@@ -213,12 +203,12 @@ void main(void) {
                 Rise = true;
                 OImpuls = false;
                 cnt = 0;
-                //TimeOut = 0;
-                if (!Buffer--) FullBuf = false;
+                if (!Buffer--) {
+                    uBlockGun = true;
+                    FullBuf = false;
+                }
             }
         }
-
-        //if(TimeOut > 5 && !FullBuf) BlockGun = false;
 
         /*********** End Block ************************************************/
     }
